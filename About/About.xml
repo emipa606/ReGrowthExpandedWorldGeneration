@@ -1,31 +1,150 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <ModMetaData>
+  <name>ReGrowth: Expanded World Generation (Continued)</name>
+  <packageId>Mlie.ReGrowthExpandedWorldGeneration</packageId>
+  <author>Helixien, Taranchuk</author>
+  <url>https://github.com/emipa606/ReGrowthExpandedWorldGeneration</url>
+  <supportedVersions>
+    <li>1.3</li>
+  </supportedVersions>
+  <modDependencies>
+    <li>
+      <packageId>brrainz.harmony</packageId>
+      <displayName>Harmony</displayName>
+      <steamWorkshopUrl>steam://url/CommunityFilePage/2009463077</steamWorkshopUrl>
+      <downloadUrl>https://github.com/pardeike/HarmonyRimWorld/releases/latest</downloadUrl>
+    </li>
+  </modDependencies>
+  <loadAfter>
+    <li>brrainz.harmony</li>
+  </loadAfter>
+  <description>[img]https://i.imgur.com/buuPQel.png[/img]
+Update of Helixien, Taranchuks mod
+https://steamcommunity.com/sharedfiles/filedetails/?id=2607979870
 
-	<name>ReGrowth: Expanded World Generation - BETA</name>
-	<author>Helixien, Taranchuk</author>
-	<supportedVersions>
-		<li>1.3</li>
-	</supportedVersions>
-	<url/>
-	<packageId>ReGrowth.BOTR.EWG</packageId>
-	<description>Mod Version: 0.9
+[img]https://i.imgur.com/pufA0kM.png[/img]
+
+[table]
+    [tr]
+        [td][url=https://invite.gg/Mlie][img]https://i.imgur.com/zdzzBrc.png[/img][/url][/td]
+        [td][url=https://github.com/emipa606/ReGrowthExpandedWorldGeneration][img]https://i.imgur.com/kTkpTOE.png[/img][/url][/td]
+    [/tr]
+[/table]
 	
-	Check the workshop page for information.</description>
-	<modDependencies>
-		<li>
-			<packageId>brrainz.harmony</packageId>
-			<displayName>Harmony</displayName>
-			<downloadUrl>https://github.com/pardeike/HarmonyRimWorld</downloadUrl>
-			<steamWorkshopUrl>https://steamcommunity.com/sharedfiles/filedetails/?id=2196278117</steamWorkshopUrl>
-		</li>
-	</modDependencies>
-	<loadAfter>
-		<li>brrainz.harmony</li>
-		<li>Ludeon.RimWorld</li>
-		<li>Ludeon.RimWorld.Royalty</li>
-		<li>Ludeon.RimWorld.Ideology</li>
-	</loadAfter>
-	<incompatibleWith>
-		<li>neitsa.PrepareLanding</li> <!-- they have destructive prefixes touching world generation. We can't do anything about them, sadly. -->
-	</incompatibleWith>
+[img]https://i.imgur.com/Z4GOv8H.png[/img]
+[b]UPDATE 07.04.2022:[/b] As of now this mod is officially discontinued and will not receive any updates or bug fixies. At the same time, I am making the mod "open-source", for a lack of better words, meaning anyone can change, expand and re-upload the mod as long as you:
+
+- Keep the name
+- Credit the original creators (Taranchuk and me)
+- Link back to the old mod in the credits.
+
+The entire mod, including code, can be found here:
+[url=https://github.com/Helixien/ReGrowth-Expanded-World-Generation]https://github.com/Helixien/ReGrowth-Expanded-World-Generation[/url]
+
+[img]https://i.imgur.com/7w5OFgC.png[/img]
+
+You can see all changes in the changelog tab!
+
+[b]Current mod version: 0.9.2 BETA[/b]
+[b]Supports Rimworld version: 1.3[/b]
+
+The mod is in beta! It works fine 95% of the time, but there might be bugs we haven't yet found and some things probably could be fine tuned and optimized. 
+
+[img]https://i.imgur.com/Pe8cTXc.png[/img]
+
+[h1]What is ReGrowth: Expanded World Generation?[/h1]
+
+Have you ever wished you could tweak the world you plan on to your liking? Remove certain biomes or roads? Make one biome spawn less or more? Make the world the size you want and not the one pre-selected for you? Have more mountains or only the sea with a few islands? Or save your world as a preset for later colonies? Or share that preset with a friend?
+
+If your answer is yes, then [b]ReGrowth: Expanded World Generation[/b] is the mod for you! Unlike all other ReGrowth mods, this one is [b]standalone[/b]! You don't need ReGrowth:Core or anything else (other than Harmony). It's made for everyone! Whether you like my mods or not.
+
+Enjoy!
+
+[img]https://i.imgur.com/uWt5Qba.png[/img]
+
+Here is an overview over everything you can control with [b]ReGrowth: Expanded World Generation[/b]:
+
+- [b]Global Coverage:[/b] Is now a slider! Choose the percentage you want!
+- [b]River Density:[/b] Want more or less rivers? Now you can!
+- [b]Mountain Density:[/b] For all you hikers! Enjoy an alpine world… or one without any!
+- [b]Sea level:[/b] Make the sea rise or fall, whatever you like!
+- [b]Axial Tilt::[/b] Works exactly like in Realistic Planets and is fully compatible with it! Planets with higher axial tilts will have more extreme seasonal temperature shifts.
+- [b]Road Density:[/b] Control how many ancient and faction roads there are.
+
+- [b]Biomes[/b]: Control each and every biome you have, from vanilla to modded ones. Finally you can create ANY planet you can think of! From boreal worlds to sea worlds with desert islands or a Mars like hellscape. It's in your hands!
+
+[b]Multiplier[/b] multiplies the spawn value of the biome by the chosen percent.
+[b]Offset[/b] adds or removes the chosen amount from the spawn value.
+
+Both sliders are added to allow more control over biomes. This will take some playing around for you to get the hang of and fully understand. If you just want to disable one, set the multiplier to 0%.
+
+- [b]Factions:[/b] Have not been changed. The game already allows a good amount of options here!
+
+- [b]Presets:[/b] Allows you to save and load presets, similar to how it works in “EdB Prepare Carefully”. Later we will allow modders to ship their own presets with their mods so they can share their version of a planet with you!
+
+- [b]Planet Preview:[/b] That one is something we added because we wanted to see if we can. And we could, but it has its limitations! Like the world you play on, each preview needs to be generated which can take quite a long time depending on whether you have a 30% coverage or a 100% one. [b]So be patient with it![/b] It does however not freeze your game and can be completely ignored. We will see if we can further optimize it in the future.
+
+It does however allow you to see how the planet you are making would look with your current setting. It's not 3D, so you can't rotate it.
+
+I also want to be clear that this mod has NO training wheels. You can go crazy with it. If you make a sea ice world and set the temps to maximum you get 70 °C ice sheets. You can do whatever you want!
+
+[img]https://i.imgur.com/QnAx6zL.png[/img]
+
+We tried to make it work with as many other mods we could right away, here is a list:
+
+- Realistic Planets
+- My Little Planet
+- Rimwar
+- Colony Groups
+- Roads of the Rim
+- Any modded biome.
+
+However there are mods that are, as of now, not working with it:
+
+- Prepare Landing: We tried to make it work, but they must look into it from their side.
+
+[img]https://i.imgur.com/toezrwG.png[/img]
+
+[b]Q: Can this mod be added to an existing save?[/b]
+A: Yes, but it doesnt really help you in any way.
+
+[b]Q: Can this mod be removed from a save?[/b]
+A: Yes, as far as we know you can! You will get some red errors after loading your save, but they should be harmless.
+
+[b]Q: Can I make world type X?[/b]
+A: Yes, with enough time you should be able to tweak and fine tune the planet to your liking!
+
+[b]Q: Can I share a preset with my friend?[/b]
+A: No, not yet, but that will come! Right now you can only save and load them yourself!
+
+[b]Q: Why should I use this mod?[/b]
+A: Because why not? 
+
+[b]Q: The preview takes forever![/b]
+A: Yep, it does. It needs to render a nearly full world, just like when you click generate. It is only a little bit faster. Why we added it then? Because we could.
+
+[b]Q: Does it scale with the UI?[/b]
+A: Yes, altho there might be some issues left we haven't found. Please report them!
+
+[b]Q: Does it require ReGrowth: Core?[/b]
+A: No!
+
+[img]https://i.imgur.com/fXBb4DJ.png[/img]
+
+- C# Code done by Taranchuk. This is his masterpiece, I just had the idea! If you love the mod, please show him your love!
+
+Rimworld is owned by Tynan Sylvester and he wants you to finally buy his book!  
+
+
+[url=https://discord.gg/7befJWr9xS][img]https://i.imgur.com/cfoFEMA.png[/img][/url]
+
+[img]https://i.imgur.com/PwoNOj4.png[/img]
+[list]
+[*] See if the the error persists if you just have this mod and its requirements active.
+[*] If not, try adding your other mods until it happens again.
+[*] Post your error-log using [url=https://steamcommunity.com/workshop/filedetails/?id=818773962]HugsLib[/url] and command Ctrl+F12
+[*] For best support, please use the Discord-channel for error-reporting.
+[*] Do not report errors by making a discussion-thread, I get no notification of that.
+[*] If you have the solution for a problem, please post it to the GitHub repository.
+[/list]</description>
 </ModMetaData>

@@ -1,0 +1,4 @@
+# Changelog for ReGrowthExpandedWorldGeneration
+
+1.3.1 - Fixed for the latest rimworld-update, hopefully
+

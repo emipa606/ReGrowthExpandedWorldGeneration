@@ -1,19 +1,18 @@
-<?xml version="1.0" encoding="utf-8" ?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
-
-	<RG.RiverDensity>River density</RG.RiverDensity>
-	<RG.AncientRoadDensity>Ancient road density</RG.AncientRoadDensity>
-	<RG.FactionRoadDensity>Faction road density</RG.FactionRoadDensity>
-	<RG.MountainDensity>Mountain density</RG.MountainDensity>
-	<RG.SeaLevel>Sea level</RG.SeaLevel>
-	<RG.Biomes>Biomes</RG.Biomes>
-	<RG.BiomeCommonalities>Biome commonalities</RG.BiomeCommonalities>
-	<RG.GeneratePreview>Generate preview</RG.GeneratePreview>
-	<RG.Commonality>Multiplier: </RG.Commonality>
-	<RG.ScoreOffset>Offset: </RG.ScoreOffset>
-	<RG.AxialTilt>Axial tilt</RG.AxialTilt>
-	<RG.Small>Small</RG.Small>
-	<RG.Large>Large</RG.Large>
-	<RG.SavePreset>Save Preset</RG.SavePreset>
-	<RG.LoadPreset>Load Preset</RG.LoadPreset>
+  <RG.RiverDensity>River density</RG.RiverDensity>
+  <RG.AncientRoadDensity>Ancient road density</RG.AncientRoadDensity>
+  <RG.FactionRoadDensity>Faction road density</RG.FactionRoadDensity>
+  <RG.MountainDensity>Mountain density</RG.MountainDensity>
+  <RG.SeaLevel>Sea level</RG.SeaLevel>
+  <RG.Biomes>Biomes</RG.Biomes>
+  <RG.BiomeCommonalities>Biome commonalities</RG.BiomeCommonalities>
+  <RG.GeneratePreview>Generate preview</RG.GeneratePreview>
+  <RG.Commonality>Multiplier: </RG.Commonality>
+  <RG.ScoreOffset>Offset: </RG.ScoreOffset>
+  <RG.AxialTilt>Axial tilt</RG.AxialTilt>
+  <RG.Small>Small</RG.Small>
+  <RG.Large>Large</RG.Large>
+  <RG.SavePreset>Save Preset</RG.SavePreset>
+  <RG.LoadPreset>Load Preset</RG.LoadPreset>
 </LanguageData>
