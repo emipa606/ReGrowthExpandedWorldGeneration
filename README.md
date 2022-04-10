@@ -4,6 +4,9 @@
 
 Update of Helixien, Taranchuks mod
 https://steamcommunity.com/sharedfiles/filedetails/?id=2607979870
+with permission
+
+- As I never used the original there may be features that Ive missed verifying so report any issues in the comments or on the discord-server.
 
 ![Image](https://i.imgur.com/pufA0kM.png)
 

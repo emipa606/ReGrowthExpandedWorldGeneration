@@ -22,6 +22,8 @@ public static class Page_CreateWorldParams_Patch
 
     private static readonly Color BackgroundColor = new Color32(byte.MaxValue, byte.MaxValue, byte.MaxValue, 15);
     private static readonly Texture2D GeneratePreview = ContentFinder<Texture2D>.Get("UI/GeneratePreview");
+    private static readonly Texture2D Visible = ContentFinder<Texture2D>.Get("UI/Visible");
+    private static readonly Texture2D InVisible = ContentFinder<Texture2D>.Get("UI/InVisible");
 
     public static WorldGenerationPreset tmpWorldGenerationPreset;
 
@@ -32,6 +34,8 @@ public static class Page_CreateWorldParams_Patch
     public static Texture2D worldPreview;
 
     public static bool isActive;
+
+    public static bool hidePreview;
 
     private static World threadedWorld;
 
@@ -194,31 +198,41 @@ public static class Page_CreateWorldParams_Patch
                 "PlanetRainfall_High".Translate(), 1f));
         }
 
-        labelRect = new Rect(0f, num + 64, 80, 30);
-        Widgets.Label(labelRect, "RG.Biomes".Translate());
-        var outRect = new Rect(labelRect.x, labelRect.yMax - 3, width2 + 195,
-            DoWindowContents_Patch.LowerWidgetHeight - 50);
-        var viewRect = new Rect(outRect.x, outRect.y, outRect.width - 16f, (DefDatabase<BiomeDef>.DefCount * 90) + 10);
-        var rect3 = new Rect(outRect.xMax - 200f - 16f, labelRect.y, 200f, Text.LineHeight);
-
-
-        Widgets.DrawBoxSolid(new Rect(outRect.x, outRect.y, outRect.width - 16f, outRect.height), BackgroundColor);
-        Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
-        num = outRect.y + 15;
-        foreach (var biomeDef in DefDatabase<BiomeDef>.AllDefs.OrderBy(x => x.label ?? x.defName))
+        if (hidePreview)
         {
-            DoBiomeSliders(biomeDef, 10, ref num, biomeDef.label?.CapitalizeFirst() ?? biomeDef.defName);
+            DoSlider(0, ref num, width2, "RG.AncientRoadDensity".Translate(),
+                ref tmpWorldGenerationPreset.ancientRoadDensity, "None".Translate());
+            DoSlider(0, ref num, width2, "RG.FactionRoadDensity".Translate(),
+                ref tmpWorldGenerationPreset.factionRoadDensity, "None".Translate());
         }
-
-        Widgets.EndScrollView();
-
-        if (tmpWorldGenerationPreset.biomeCommonalities.Any(x => x.Value != 10) ||
-            tmpWorldGenerationPreset.biomeScoreOffsets.Any(y => y.Value != 0))
+        else
         {
-            if (Widgets.ButtonText(rect3, "ResetFactionsToDefault".Translate()))
+            labelRect = new Rect(0f, num + 64, 80, 30);
+            Widgets.Label(labelRect, "RG.Biomes".Translate());
+            var outRect = new Rect(labelRect.x, labelRect.yMax - 3, width2 + 195,
+                DoWindowContents_Patch.LowerWidgetHeight - 50);
+            var viewRect = new Rect(outRect.x, outRect.y, outRect.width - 16f,
+                (DefDatabase<BiomeDef>.DefCount * 90) + 10);
+            var rect3 = new Rect(outRect.xMax - 200f - 16f, labelRect.y, 200f, Text.LineHeight);
+
+
+            Widgets.DrawBoxSolid(new Rect(outRect.x, outRect.y, outRect.width - 16f, outRect.height), BackgroundColor);
+            Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
+            num = outRect.y + 15;
+            foreach (var biomeDef in DefDatabase<BiomeDef>.AllDefs.OrderBy(x => x.label ?? x.defName))
             {
-                tmpWorldGenerationPreset.ResetBiomeCommonalities();
-                tmpWorldGenerationPreset.ResetBiomeScoreOffsets();
+                DoBiomeSliders(biomeDef, 10, ref num, biomeDef.label?.CapitalizeFirst() ?? biomeDef.defName);
+            }
+
+            Widgets.EndScrollView();
+            if (tmpWorldGenerationPreset.biomeCommonalities.Any(x => x.Value != 10) ||
+                tmpWorldGenerationPreset.biomeScoreOffsets.Any(y => y.Value != 0))
+            {
+                if (Widgets.ButtonText(rect3, "ResetFactionsToDefault".Translate()))
+                {
+                    tmpWorldGenerationPreset.ResetBiomeCommonalities();
+                    tmpWorldGenerationPreset.ResetBiomeScoreOffsets();
+                }
             }
         }
 
@@ -255,24 +269,66 @@ public static class Page_CreateWorldParams_Patch
     {
         var previewAreaRect = new Rect(545, 10, WorldCameraHeight, WorldCameraWidth);
         Rect generateButtonRect;
-        if (worldPreview is null)
+        //if (worldPreview is null)
+        //{
+        //    generateButtonRect = new Rect(previewAreaRect.center.x - 12, previewAreaRect.center.y - 12, 35, 35);
+        //    Text.Font = GameFont.Medium;
+        //    var textSize = Text.CalcSize("RG.GeneratePreview".Translate());
+        //    Widgets.Label(
+        //        new Rect(generateButtonRect.center.x - (textSize.x / 2), generateButtonRect.yMax, textSize.x,
+        //            textSize.y), "RG.GeneratePreview".Translate());
+        //    Text.Font = GameFont.Small;
+        //}
+        //else
+        //{
+        generateButtonRect = new Rect(previewAreaRect.xMax - 35, previewAreaRect.y, 35, 35);
+        //}
+
+        var hideButtonRect = generateButtonRect;
+        hideButtonRect.x += generateButtonRect.width * 1.1f;
+        DrawHidePreviewButton(window, hideButtonRect);
+        Rect labelRect;
+        if (hidePreview)
         {
-            generateButtonRect = new Rect(previewAreaRect.center.x - 12, previewAreaRect.center.y - 12, 35, 35);
-            Text.Font = GameFont.Medium;
-            var textSize = Text.CalcSize("RG.GeneratePreview".Translate());
-            Widgets.Label(
-                new Rect(generateButtonRect.center.x - (textSize.x / 2), generateButtonRect.yMax, textSize.x,
-                    textSize.y), "RG.GeneratePreview".Translate());
-            Text.Font = GameFont.Small;
-        }
-        else
-        {
-            generateButtonRect = new Rect(previewAreaRect.xMax - 35, previewAreaRect.y, 35, 35);
+            labelRect = new Rect(previewAreaRect.x - 55, previewAreaRect.y + hideButtonRect.height,
+                455, 25);
+            Widgets.Label(labelRect, "RG.Biomes".Translate());
+            var outRect = new Rect(labelRect.x, labelRect.yMax - 3, labelRect.width,
+                previewAreaRect.height);
+            var viewRect = new Rect(outRect.x, outRect.y, outRect.width - 16f,
+                (DefDatabase<BiomeDef>.DefCount * 90) + 10);
+            var rect3 = new Rect(outRect.xMax - 200f - 16f, labelRect.y, 200f, Text.LineHeight);
+
+            Widgets.DrawBoxSolid(new Rect(outRect.x, outRect.y, outRect.width - 16f, outRect.height), BackgroundColor);
+            Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
+            var num = outRect.y + 15;
+            foreach (var biomeDef in DefDatabase<BiomeDef>.AllDefs.OrderBy(x => x.label ?? x.defName))
+            {
+                DoBiomeSliders(biomeDef, labelRect.x + 10, ref num,
+                    biomeDef.label?.CapitalizeFirst() ?? biomeDef.defName);
+            }
+
+            Widgets.EndScrollView();
+            if (tmpWorldGenerationPreset.biomeCommonalities.All(x => x.Value == 10) &&
+                tmpWorldGenerationPreset.biomeScoreOffsets.All(y => y.Value == 0))
+            {
+                return;
+            }
+
+            if (!Widgets.ButtonText(rect3, "ResetFactionsToDefault".Translate()))
+            {
+                return;
+            }
+
+            tmpWorldGenerationPreset.ResetBiomeCommonalities();
+            tmpWorldGenerationPreset.ResetBiomeScoreOffsets();
+            return;
         }
 
         DrawGeneratePreviewButton(window, generateButtonRect);
         var numAttempt = 0;
-        if (thread is null && Find.World != null && Find.World.info.name != "DefaultWorldName" || worldPreview != null)
+        if (thread is null && Find.World != null && Find.World.info.name != "DefaultWorldName" ||
+            worldPreview != null)
         {
             if (dirty)
             {
@@ -314,7 +370,7 @@ public static class Page_CreateWorldParams_Patch
         }
 
         numY += 40;
-        var labelRect = new Rect(previewAreaRect.x - 55, numY, 200f, 30f);
+        labelRect = new Rect(previewAreaRect.x - 55, numY, 200f, 30f);
         var slider = new Rect(labelRect.xMax, numY, 256, 30f);
         Widgets.Label(labelRect, "RG.AxialTilt".Translate());
         tmpWorldGenerationPreset.axialTilt = (AxialTilt)Mathf.RoundToInt(Widgets.HorizontalSlider(slider,
@@ -367,6 +423,11 @@ public static class Page_CreateWorldParams_Patch
             generatingWorld = false;
         }
 
+        if (hidePreview)
+        {
+            return;
+        }
+
         thread = new Thread(delegate()
         {
             var planetCoverage =
@@ -386,6 +447,27 @@ public static class Page_CreateWorldParams_Patch
                 population, factionCounts);
         });
         thread.Start();
+    }
+
+    private static void DrawHidePreviewButton(Page_CreateWorldParams window, Rect hideButtonRect)
+    {
+        var buttonTexture = Visible;
+        if (hidePreview)
+        {
+            buttonTexture = InVisible;
+        }
+
+        if (Widgets.ButtonImageFitted(hideButtonRect, buttonTexture))
+        {
+            hidePreview = !hidePreview;
+            if (!hidePreview)
+            {
+                StartRefreshWorldPreview(window);
+            }
+        }
+
+        Widgets.DrawHighlightIfMouseover(hideButtonRect);
+        TooltipHandler.TipRegion(hideButtonRect, "RG.HidePreview".Translate());
     }
 
     private static void DrawGeneratePreviewButton(Page_CreateWorldParams window, Rect generateButtonRect)
@@ -659,8 +741,8 @@ public static class Page_CreateWorldParams_Patch
         var labelRect = new Rect(x, num, 200f, 30f);
         Widgets.Label(labelRect, label);
         var slider = new Rect(labelRect.xMax, num, width2, 30f);
-        field = Widgets.HorizontalSlider(slider, (int)(field * 3f), 0, 6, true,
-            "PlanetRainfall_Normal".Translate(), leftLabel, "PlanetRainfall_High".Translate(), 1f) / 3f;
+        field = (float)Math.Round((decimal)Widgets.HorizontalSlider(slider, field, 0, 2f, true,
+            "PlanetRainfall_Normal".Translate(), leftLabel, "PlanetRainfall_High".Translate(), 0.1f), 2);
     }
 
     private static void DoBiomeSliders(BiomeDef biomeDef, float x, ref float num, string label)

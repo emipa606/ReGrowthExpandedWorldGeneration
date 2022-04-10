@@ -11,7 +11,13 @@ public static class DoWindowContents_Patch
 
     public static void Prefix(ref Rect rect)
     {
-        rect.y += 425;
-        rect.height = LowerWidgetHeight;
+        var modifier = 0;
+        if (Page_CreateWorldParams_Patch.hidePreview)
+        {
+            modifier = 85;
+        }
+
+        rect.y += 425 - modifier;
+        rect.height = LowerWidgetHeight + modifier;
     }
 }
