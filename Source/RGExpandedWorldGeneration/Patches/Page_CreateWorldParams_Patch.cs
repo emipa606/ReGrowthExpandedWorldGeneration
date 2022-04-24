@@ -741,8 +741,8 @@ public static class Page_CreateWorldParams_Patch
         var labelRect = new Rect(x, num, 200f, 30f);
         Widgets.Label(labelRect, label);
         var slider = new Rect(labelRect.xMax, num, width2, 30f);
-        field = (float)Math.Round((decimal)Widgets.HorizontalSlider(slider, field, 0, 2f, true,
-            "PlanetRainfall_Normal".Translate(), leftLabel, "PlanetRainfall_High".Translate(), 0.1f), 2);
+        field = Widgets.HorizontalSlider(slider, field, 0, 2f, true,
+            "PlanetRainfall_Normal".Translate(), leftLabel, "PlanetRainfall_High".Translate(), 0.1f);
     }
 
     private static void DoBiomeSliders(BiomeDef biomeDef, float x, ref float num, string label)
