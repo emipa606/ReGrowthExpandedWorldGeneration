@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+  <RG.RiverDensity>Flussdichte</RG.RiverDensity>
+  <RG.AncientRoadDensity>Antike Straßendichte</RG.AncientRoadDensity>
+  <RG.FactionRoadDensity>Fraktionsstraßendichte</RG.FactionRoadDensity>
+  <RG.MountainDensity>Gebirgsdichte</RG.MountainDensity>
+  <RG.SeaLevel>Meeresspiegel</RG.SeaLevel>
+  <RG.Biomes>Biome</RG.Biomes>
+  <RG.BiomeCommonalities>Biom Gemeinsamkeiten</RG.BiomeCommonalities>
+  <RG.GeneratePreview>Vorschau generieren</RG.GeneratePreview>
+  <RG.Commonality>Verstärker: </RG.Commonality>
+  <RG.ScoreOffset>Ausgleich: </RG.ScoreOffset>
+  <RG.AxialTilt>axiale Neigung</RG.AxialTilt>
+  <RG.Small>Klein</RG.Small>
+  <RG.Large>Groß</RG.Large>
+  <RG.SavePreset>Voreinst. speichern</RG.SavePreset>
+  <RG.LoadPreset>Voreinst. laden</RG.LoadPreset>
+  <RG.HidePreview>Weltvorschau ein-/ausblenden</RG.HidePreview>
+</LanguageData>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using RimWorld;
 using RimWorld.Planet;
@@ -144,5 +145,40 @@ public class WorldGenerationPreset : IExposable
         {
             biomeScoreOffsets.Add(biomeDef.defName, 0);
         }
+    }
+
+    public T RandomEnum<T>()
+    {
+        var values = (T[])Enum.GetValues(typeof(T));
+        return values[new Random(Guid.NewGuid().GetHashCode()).Next(0, values.Length)];
+    }
+
+    public void RandomizeValues()
+    {
+        var biomeDefs = DefDatabase<BiomeDef>.AllDefs;
+        biomeCommonalities = new Dictionary<string, int>();
+        foreach (var biomeDef in biomeDefs)
+        {
+            biomeCommonalities.Add(biomeDef.defName, 10 + Rand.RangeInclusive(-2, 2));
+        }
+
+        biomeScoreOffsets = new Dictionary<string, int>();
+        foreach (var biomeDef in biomeDefs)
+        {
+            biomeScoreOffsets.Add(biomeDef.defName, 0 + Rand.RangeInclusive(-2, 2));
+        }
+
+        seedString = GenText.RandomSeedString();
+
+        riverDensity = 1f + Rand.Range(-0.5f, 0.5f);
+        ancientRoadDensity = 1f + Rand.Range(-0.5f, 0.5f);
+        factionRoadDensity = 1f + Rand.Range(-0.5f, 0.5f);
+        mountainDensity = 1f + Rand.Range(-0.5f, 0.5f);
+        seaLevel = 1f + Rand.Range(-0.25f, 0.25f);
+
+        axialTilt = RandomEnum<AxialTilt>();
+        rainfall = RandomEnum<OverallRainfall>();
+        temperature = RandomEnum<OverallTemperature>();
+        population = RandomEnum<OverallPopulation>();
     }
 }

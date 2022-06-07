@@ -136,7 +136,7 @@ public static class Page_CreateWorldParams_Patch
             UIHighlighter.HighlightOpportunity(rect2, "NextPage");
         }
 
-        var savePresetRect = new Rect(backRect.xMax + 100, y, buttonSizeField.x, buttonSizeField.y);
+        var savePresetRect = new Rect(backRect.xMax + 15, y, buttonSizeField.x, buttonSizeField.y);
         string labelSavePreset = "RG.SavePreset".Translate();
         if (Widgets.ButtonText(savePresetRect, labelSavePreset))
         {
@@ -152,7 +152,15 @@ public static class Page_CreateWorldParams_Patch
             Find.WindowStack.Add(loadWindow);
         }
 
-        var midActRect = new Rect(loadPresetRect.xMax + 15, y, buttonSizeField.x, buttonSizeField.y);
+        var randomizeRect = new Rect(loadPresetRect.xMax + 15, y, buttonSizeField.x, buttonSizeField.y);
+        string randomize = "Randomize".Translate();
+        if (Widgets.ButtonText(randomizeRect, randomize))
+        {
+            tmpWorldGenerationPreset.RandomizeValues();
+            ApplyChanges(window);
+        }
+
+        var midActRect = new Rect(randomizeRect.xMax + 15, y, buttonSizeField.x, buttonSizeField.y);
         if (midAct != null && Widgets.ButtonText(midActRect, midLabel))
         {
             midAct();
@@ -440,11 +448,8 @@ public static class Page_CreateWorldParams_Patch
                 (OverallTemperature)AccessTools.Field(typeof(Page_CreateWorldParams), "temperature").GetValue(window);
             var population =
                 (OverallPopulation)AccessTools.Field(typeof(Page_CreateWorldParams), "population").GetValue(window);
-            var factionCounts =
-                (Dictionary<FactionDef, int>)AccessTools.Field(typeof(Page_CreateWorldParams), "factionCounts")
-                    .GetValue(window);
             GenerateWorld(planetCoverage, seedString, rainfall, temperature,
-                population, factionCounts);
+                population);
         });
         thread.Start();
     }
@@ -537,8 +542,7 @@ public static class Page_CreateWorldParams_Patch
     }
 
     public static void GenerateWorld(float planetCoverage, string seedString, OverallRainfall overallRainfall,
-        OverallTemperature overallTemperature, OverallPopulation population,
-        Dictionary<FactionDef, int> factionCounts = null)
+        OverallTemperature overallTemperature, OverallPopulation population)
     {
         generatingWorld = true;
         Rand.PushState();
@@ -569,6 +573,7 @@ public static class Page_CreateWorldParams_Patch
             Current.CreatingWorld.ticksAbsCache = new ConfiguredTicksAbsAtGameStartCache();
             Current.Game.InitData.playerFaction = prevFaction;
             Current.CreatingWorld.info.seedString = seedString;
+
             Current.CreatingWorld.info.planetCoverage = planetCoverage;
             Current.CreatingWorld.info.overallRainfall = overallRainfall;
             Current.CreatingWorld.info.overallTemperature = overallTemperature;
@@ -596,17 +601,17 @@ public static class Page_CreateWorldParams_Patch
                 }
                 catch (Exception ex)
                 {
-                    if (!(ex is ThreadAbortException))
-                    {
-                        Log.Error("Error in WorldGenStep: " + ex);
-                    }
-                    else
+                    if (ex is ThreadAbortException)
                     {
                         Rand.PopState();
                         Current.CreatingWorld = null;
                         generatingWorld = false;
                         Current.ProgramState = prevProgramState;
                         return;
+                    }
+                    else
+                    {
+                        Log.Error("Error in WorldGenStep: " + ex);
                     }
                 }
             }
@@ -623,15 +628,11 @@ public static class Page_CreateWorldParams_Patch
         }
         catch (Exception ex)
         {
-            if (!(ex is ThreadAbortException))
-            {
-                Log.Error("Error: " + ex);
-            }
-            else
+            if (ex is ThreadAbortException)
             {
                 var stateStack =
-                    (string)AccessTools.Field(typeof(Rand), "stateStack").GetValue(null);
-                if (stateStack.Any())
+                    (Stack<ulong>)AccessTools.Field(typeof(Rand), "stateStack").GetValue(null);
+                if (stateStack?.Any() == true)
                 {
                     Rand.PopState();
                 }
@@ -640,12 +641,16 @@ public static class Page_CreateWorldParams_Patch
                 Current.ProgramState = prevProgramState;
                 Current.CreatingWorld = null;
             }
+            else
+            {
+                Log.Error("Error: " + ex);
+            }
         }
         finally
         {
             var stateStack =
-                (string)AccessTools.Field(typeof(Rand), "stateStack").GetValue(null);
-            if (stateStack.Any())
+                (Stack<ulong>)AccessTools.Field(typeof(Rand), "stateStack").GetValue(null);
+            if (stateStack?.Any() == true)
             {
                 Rand.PopState();
             }

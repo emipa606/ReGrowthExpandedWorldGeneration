@@ -1,5 +1,8 @@
 # Changelog for ReGrowthExpandedWorldGeneration
 
+1.3.5 - Added randomizer-button, fixed some silent errors
+
+
 1.3.4 - Some slider-settings caused an irritating sound. Not anymore.
 
 
