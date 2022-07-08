@@ -1,5 +1,8 @@
 # Changelog for ReGrowthExpandedWorldGeneration
 
+1.3.6 - Fixed my little planet axial tilt not showing when hiding preview.
+
+
 1.3.5 - Added randomizer-button, fixed some silent errors
 
 

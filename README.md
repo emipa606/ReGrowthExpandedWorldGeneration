@@ -7,6 +7,8 @@ https://steamcommunity.com/sharedfiles/filedetails/?id=2607979870
 with permission
 
 - Added a "Hide preview" button. Gives more room to biome and faction-settings and does not consume resources by regenerating the preview when changing values. 
+- Added a randomizer button for the world-conditions
+- German translation added, thank you triestar1!
 
 ![Image](https://i.imgur.com/pufA0kM.png)
 

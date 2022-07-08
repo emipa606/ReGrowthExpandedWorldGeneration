@@ -212,6 +212,19 @@ public static class Page_CreateWorldParams_Patch
                 ref tmpWorldGenerationPreset.ancientRoadDensity, "None".Translate());
             DoSlider(0, ref num, width2, "RG.FactionRoadDensity".Translate(),
                 ref tmpWorldGenerationPreset.factionRoadDensity, "None".Translate());
+            if (!ModCompat.MyLittlePlanetActive)
+            {
+                return;
+            }
+
+            num += 40;
+            labelRect = new Rect(0, num, 200f, 30f);
+            var slider = new Rect(labelRect.xMax, num, 256, 30f);
+            Widgets.Label(labelRect, "RG.AxialTilt".Translate());
+            tmpWorldGenerationPreset.axialTilt = (AxialTilt)Mathf.RoundToInt(Widgets.HorizontalSlider(slider,
+                (float)tmpWorldGenerationPreset.axialTilt, 0f, AxialTiltUtility.EnumValuesCount - 1, true,
+                "PlanetRainfall_Normal".Translate(), "PlanetRainfall_Low".Translate(),
+                "PlanetRainfall_High".Translate(), 1f));
         }
         else
         {
