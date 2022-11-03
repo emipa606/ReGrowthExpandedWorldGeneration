@@ -24,11 +24,6 @@ public static class RoadsOfRim_Patch
     [HarmonyPriority(int.MaxValue)]
     public static bool Prefix()
     {
-        if (Page_CreateWorldParams_Patch.thread != null)
-        {
-            return false;
-        }
-
-        return true;
+        return Page_CreateWorldParams_Patch.thread == null;
     }
 }

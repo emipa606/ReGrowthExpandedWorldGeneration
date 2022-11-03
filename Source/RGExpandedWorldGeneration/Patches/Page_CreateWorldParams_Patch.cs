@@ -24,6 +24,8 @@ public static class Page_CreateWorldParams_Patch
     private static readonly Texture2D GeneratePreview = ContentFinder<Texture2D>.Get("UI/GeneratePreview");
     private static readonly Texture2D Visible = ContentFinder<Texture2D>.Get("UI/Visible");
     private static readonly Texture2D InVisible = ContentFinder<Texture2D>.Get("UI/InVisible");
+    private static readonly Texture2D saveTexture2D = ContentFinder<Texture2D>.Get("UI/Misc/BarInstantMarkerRotated");
+    private static readonly Texture2D loadTexture2D = ContentFinder<Texture2D>.Get("UI/Misc/BarInstantMarker");
 
     public static WorldGenerationPreset tmpWorldGenerationPreset;
 
@@ -72,14 +74,14 @@ public static class Page_CreateWorldParams_Patch
         {
             var code = codes[i];
 
-            if (codes[i].opcode == OpCodes.Ldloc_S && codes[i].operand is LocalBuilder { LocalIndex: 9 } &&
+            if (codes[i].opcode == OpCodes.Ldloc_S && codes[i].operand is LocalBuilder { LocalIndex: 11 } &&
                 i + 2 < codes.Count && codes[i + 2].LoadsField(planetCoverage))
             {
                 var i1 = i;
                 i += codes.FirstIndexOf(x =>
                     x.Calls(AccessTools.Method(typeof(WindowStack), "Add")) && codes.IndexOf(x) > i1) - i;
                 yield return new CodeInstruction(OpCodes.Ldarg_0);
-                yield return new CodeInstruction(OpCodes.Ldloc_S, 9);
+                yield return new CodeInstruction(OpCodes.Ldloc_S, 11);
                 yield return new CodeInstruction(OpCodes.Call, doGlobeCoverageSliderMethod);
             }
             else
@@ -93,8 +95,8 @@ public static class Page_CreateWorldParams_Patch
             }
 
             yield return new CodeInstruction(OpCodes.Ldarg_0);
-            yield return new CodeInstruction(OpCodes.Ldloca_S, 6);
-            yield return new CodeInstruction(OpCodes.Ldloc_S, 7);
+            yield return new CodeInstruction(OpCodes.Ldloca_S, 7);
+            yield return new CodeInstruction(OpCodes.Ldloc_S, 8);
             yield return new CodeInstruction(OpCodes.Call, doGuiMethod);
             found = true;
         }
@@ -106,13 +108,13 @@ public static class Page_CreateWorldParams_Patch
         var y = rect.y + rect.height - 38f;
         Text.Font = GameFont.Small;
         string label = "Back".Translate();
-        var buttonSizeField =
-            (Vector2)AccessTools.Field(typeof(Page_CreateWorldParams), "BottomButSize").GetValue(window);
         var canDoBackMethod = AccessTools.Method(typeof(Page_CreateWorldParams), "CanDoBack");
         var doBackMethod = AccessTools.Method(typeof(Page_CreateWorldParams), "DoBack");
         var canDoNextMethod = AccessTools.Method(typeof(Page_CreateWorldParams), "CanDoNext");
         var doNextMethod = AccessTools.Method(typeof(Page_CreateWorldParams), "DoNext");
-        var backRect = new Rect(rect.x, y, buttonSizeField.x, buttonSizeField.y);
+        var buttonSpacer = Page.BottomButSize.x + 15;
+        var currentX = rect.x;
+        var backRect = new Rect(currentX, y, Page.BottomButSize.x, Page.BottomButSize.y);
         if ((Widgets.ButtonText(backRect, label)
              || KeyBindingDefOf.Cancel.KeyDownEvent) && (bool)canDoBackMethod.Invoke(window, new object[] { }))
         {
@@ -126,7 +128,7 @@ public static class Page_CreateWorldParams_Patch
                 nextLabel = "Next".Translate();
             }
 
-            var rect2 = new Rect(rect.x + rect.width - buttonSizeField.x, y, buttonSizeField.x, buttonSizeField.y);
+            var rect2 = new Rect(rect.xMax - Page.BottomButSize.x, y, Page.BottomButSize.x, Page.BottomButSize.y);
             if ((Widgets.ButtonText(rect2, nextLabel) || doNextOnKeypress && KeyBindingDefOf.Accept.KeyDownEvent) &&
                 (bool)canDoNextMethod.Invoke(window, new object[] { }))
             {
@@ -136,35 +138,46 @@ public static class Page_CreateWorldParams_Patch
             UIHighlighter.HighlightOpportunity(rect2, "NextPage");
         }
 
-        var savePresetRect = new Rect(backRect.xMax + 15, y, buttonSizeField.x, buttonSizeField.y);
+        if (midAct != null)
+        {
+            currentX += buttonSpacer;
+            var midActRect = new Rect(currentX, y, Page.BottomButSize.x, Page.BottomButSize.y);
+            if (Widgets.ButtonText(midActRect, midLabel))
+            {
+                midAct();
+            }
+        }
+
+        currentX += buttonSpacer;
+        var savePresetRect = new Rect(currentX, y, Page.BottomButSize.x / 2, Page.BottomButSize.y);
         string labelSavePreset = "RG.SavePreset".Translate();
-        if (Widgets.ButtonText(savePresetRect, labelSavePreset))
+        TooltipHandler.TipRegion(savePresetRect, labelSavePreset);
+        if (Widgets.ButtonImageFitted(savePresetRect, saveTexture2D))
         {
             var saveWindow = new Dialog_PresetList_Save(window);
             Find.WindowStack.Add(saveWindow);
         }
 
-        var loadPresetRect = new Rect(savePresetRect.xMax + 15, y, buttonSizeField.x, buttonSizeField.y);
+        currentX += Page.BottomButSize.x / 2;
+        var loadPresetRect = new Rect(currentX, y, Page.BottomButSize.x / 2, Page.BottomButSize.y);
         string labelLoadPreset = "RG.LoadPreset".Translate();
-        if (Widgets.ButtonText(loadPresetRect, labelLoadPreset))
+        TooltipHandler.TipRegion(loadPresetRect, labelLoadPreset);
+        if (Widgets.ButtonImageFitted(loadPresetRect, loadTexture2D))
         {
             var loadWindow = new Dialog_PresetList_Load(window);
             Find.WindowStack.Add(loadWindow);
         }
 
-        var randomizeRect = new Rect(loadPresetRect.xMax + 15, y, buttonSizeField.x, buttonSizeField.y);
+        var randomizeRect = new Rect(rect.xMax - Page.BottomButSize.x - buttonSpacer, y, Page.BottomButSize.x,
+            Page.BottomButSize.y);
         string randomize = "Randomize".Translate();
-        if (Widgets.ButtonText(randomizeRect, randomize))
+        if (!Widgets.ButtonText(randomizeRect, randomize))
         {
-            tmpWorldGenerationPreset.RandomizeValues();
-            ApplyChanges(window);
+            return;
         }
 
-        var midActRect = new Rect(randomizeRect.xMax + 15, y, buttonSizeField.x, buttonSizeField.y);
-        if (midAct != null && Widgets.ButtonText(midActRect, midLabel))
-        {
-            midAct();
-        }
+        tmpWorldGenerationPreset.RandomizeValues();
+        ApplyChanges(window);
     }
 
     private static void Postfix(Page_CreateWorldParams __instance)
@@ -177,7 +190,7 @@ public static class Page_CreateWorldParams_Patch
         var planetCoverage =
             (float)AccessTools.Field(typeof(Page_CreateWorldParams), "planetCoverage").GetValue(window);
         var value = (double)Widgets.HorizontalSlider(rect, planetCoverage, 0.05f, 1, false,
-            (planetCoverage * 100) + "%", "RG.Small".Translate(), "RG.Large".Translate()) * 100;
+            $"{planetCoverage * 100}%", "RG.Small".Translate(), "RG.Large".Translate()) * 100;
         AccessTools.Field(typeof(Page_CreateWorldParams), "planetCoverage")
             .SetValue(window, (float)Math.Round(value / 5) * 5 / 100);
     }
@@ -245,11 +258,12 @@ public static class Page_CreateWorldParams_Patch
                 DoBiomeSliders(biomeDef, 10, ref num, biomeDef.label?.CapitalizeFirst() ?? biomeDef.defName);
             }
 
+            num -= 50f;
             Widgets.EndScrollView();
             if (tmpWorldGenerationPreset.biomeCommonalities.Any(x => x.Value != 10) ||
                 tmpWorldGenerationPreset.biomeScoreOffsets.Any(y => y.Value != 0))
             {
-                if (Widgets.ButtonText(rect3, "ResetFactionsToDefault".Translate()))
+                if (Widgets.ButtonText(rect3, "RG.ResetBiomesToDefault".Translate()))
                 {
                     tmpWorldGenerationPreset.ResetBiomeCommonalities();
                     tmpWorldGenerationPreset.ResetBiomeScoreOffsets();
@@ -289,21 +303,7 @@ public static class Page_CreateWorldParams_Patch
     private static void DoWorldPreviewArea(Page_CreateWorldParams window)
     {
         var previewAreaRect = new Rect(545, 10, WorldCameraHeight, WorldCameraWidth);
-        Rect generateButtonRect;
-        //if (worldPreview is null)
-        //{
-        //    generateButtonRect = new Rect(previewAreaRect.center.x - 12, previewAreaRect.center.y - 12, 35, 35);
-        //    Text.Font = GameFont.Medium;
-        //    var textSize = Text.CalcSize("RG.GeneratePreview".Translate());
-        //    Widgets.Label(
-        //        new Rect(generateButtonRect.center.x - (textSize.x / 2), generateButtonRect.yMax, textSize.x,
-        //            textSize.y), "RG.GeneratePreview".Translate());
-        //    Text.Font = GameFont.Small;
-        //}
-        //else
-        //{
-        generateButtonRect = new Rect(previewAreaRect.xMax - 35, previewAreaRect.y, 35, 35);
-        //}
+        var generateButtonRect = new Rect(previewAreaRect.xMax - 35, previewAreaRect.y, 35, 35);
 
         var hideButtonRect = generateButtonRect;
         hideButtonRect.x += generateButtonRect.width * 1.1f;
@@ -336,7 +336,7 @@ public static class Page_CreateWorldParams_Patch
                 return;
             }
 
-            if (!Widgets.ButtonText(rect3, "ResetFactionsToDefault".Translate()))
+            if (!Widgets.ButtonText(rect3, "RG.ResetBiomesToDefault".Translate()))
             {
                 return;
             }
@@ -402,30 +402,15 @@ public static class Page_CreateWorldParams_Patch
 
     public static void ApplyChanges(Page_CreateWorldParams window)
     {
-        AccessTools.Field(typeof(Page_CreateWorldParams), "rainfall")
-            .SetValue(window, tmpWorldGenerationPreset.rainfall);
-        AccessTools.Field(typeof(Page_CreateWorldParams), "population")
-            .SetValue(window, tmpWorldGenerationPreset.population);
-        AccessTools.Field(typeof(Page_CreateWorldParams), "planetCoverage")
-            .SetValue(window, tmpWorldGenerationPreset.planetCoverage);
-        AccessTools.Field(typeof(Page_CreateWorldParams), "seedString")
-            .SetValue(window, tmpWorldGenerationPreset.seedString);
-        AccessTools.Field(typeof(Page_CreateWorldParams), "temperature")
-            .SetValue(window, tmpWorldGenerationPreset.temperature);
-        var factionCounts =
-            (Dictionary<FactionDef, int>)AccessTools.Field(typeof(Page_CreateWorldParams), "factionCounts")
-                .GetValue(window);
-
-        foreach (var data in tmpWorldGenerationPreset.factionCounts)
+        window.rainfall = tmpWorldGenerationPreset.rainfall;
+        window.population = tmpWorldGenerationPreset.population;
+        window.planetCoverage = tmpWorldGenerationPreset.planetCoverage;
+        window.seedString = tmpWorldGenerationPreset.seedString;
+        window.temperature = tmpWorldGenerationPreset.temperature;
+        if (ModsConfig.BiotechActive)
         {
-            var factionDef = DefDatabase<FactionDef>.GetNamedSilentFail(data.Key);
-            if (factionDef != null)
-            {
-                factionCounts[factionDef] = data.Value;
-            }
+            window.pollution = tmpWorldGenerationPreset.pollution;
         }
-
-        AccessTools.Field(typeof(Page_CreateWorldParams), "factionCounts").SetValue(window, factionCounts);
     }
 
     private static bool IsBlack(Texture2D texture)
@@ -449,21 +434,7 @@ public static class Page_CreateWorldParams_Patch
             return;
         }
 
-        thread = new Thread(delegate()
-        {
-            var planetCoverage =
-                (float)AccessTools.Field(typeof(Page_CreateWorldParams), "planetCoverage").GetValue(window);
-            var seedString =
-                (string)AccessTools.Field(typeof(Page_CreateWorldParams), "seedString").GetValue(window);
-            var rainfall =
-                (OverallRainfall)AccessTools.Field(typeof(Page_CreateWorldParams), "rainfall").GetValue(window);
-            var temperature =
-                (OverallTemperature)AccessTools.Field(typeof(Page_CreateWorldParams), "temperature").GetValue(window);
-            var population =
-                (OverallPopulation)AccessTools.Field(typeof(Page_CreateWorldParams), "population").GetValue(window);
-            GenerateWorld(planetCoverage, seedString, rainfall, temperature,
-                population);
-        });
+        thread = new Thread(delegate() { GenerateWorld(window); });
         thread.Start();
     }
 
@@ -554,13 +525,12 @@ public static class Page_CreateWorldParams_Patch
         }
     }
 
-    public static void GenerateWorld(float planetCoverage, string seedString, OverallRainfall overallRainfall,
-        OverallTemperature overallTemperature, OverallPopulation population)
+    public static void GenerateWorld(Page_CreateWorldParams page)
     {
         generatingWorld = true;
         Rand.PushState();
 
-        var seed = Rand.Seed = GenText.StableStringHash(seedString);
+        var seed = Rand.Seed = GenText.StableStringHash(page.seedString);
         var prevFaction = Find.World?.factionManager?.OfPlayer;
         var prevProgramState = Current.ProgramState;
         var prevGrid = Find.World?.grid;
@@ -580,17 +550,22 @@ public static class Page_CreateWorldParams_Patch
                 grid = prevGrid
             };
 
-            AccessTools.Field(typeof(FactionManager), "ofPlayer")
-                .SetValue(Current.CreatingWorld.factionManager, prevFaction);
+            Current.CreatingWorld.factionManager.ofPlayer = prevFaction;
             Current.CreatingWorld.dynamicDrawManager = new WorldDynamicDrawManager();
             Current.CreatingWorld.ticksAbsCache = new ConfiguredTicksAbsAtGameStartCache();
             Current.Game.InitData.playerFaction = prevFaction;
-            Current.CreatingWorld.info.seedString = seedString;
+            Current.CreatingWorld.info.seedString = page.seedString;
 
-            Current.CreatingWorld.info.planetCoverage = planetCoverage;
-            Current.CreatingWorld.info.overallRainfall = overallRainfall;
-            Current.CreatingWorld.info.overallTemperature = overallTemperature;
-            Current.CreatingWorld.info.overallPopulation = population;
+            Current.CreatingWorld.info.planetCoverage = page.planetCoverage;
+            Current.CreatingWorld.info.overallRainfall = page.rainfall;
+            Current.CreatingWorld.info.overallTemperature = page.temperature;
+            Current.CreatingWorld.info.overallPopulation = page.population;
+
+            if (ModsConfig.BiotechActive)
+            {
+                Current.CreatingWorld.info.pollution = page.pollution;
+            }
+
             Current.CreatingWorld.info.name = NameGenerator.GenerateName(RulePackDefOf.NamerWorld);
 
             var tmpGenSteps = new List<WorldGenStepDef>();
@@ -605,11 +580,10 @@ public static class Page_CreateWorldParams_Patch
                         continue;
                     }
 
-                    tmpGenSteps[i].worldGenStep.GenerateFresh(seedString);
+                    tmpGenSteps[i].worldGenStep.GenerateFresh(page.seedString);
                     if (tmpGenSteps[i].defName == "Components" && prevFaction != null)
                     {
-                        AccessTools.Field(typeof(FactionManager), "ofPlayer")
-                            .SetValue(Current.CreatingWorld.factionManager, prevFaction);
+                        Current.CreatingWorld.factionManager.ofPlayer = prevFaction;
                     }
                 }
                 catch (Exception ex)
@@ -624,7 +598,7 @@ public static class Page_CreateWorldParams_Patch
                     }
                     else
                     {
-                        Log.Error("Error in WorldGenStep: " + ex);
+                        Log.Error($"Error in WorldGenStep: {ex}");
                     }
                 }
             }
@@ -643,8 +617,7 @@ public static class Page_CreateWorldParams_Patch
         {
             if (ex is ThreadAbortException)
             {
-                var stateStack =
-                    (Stack<ulong>)AccessTools.Field(typeof(Rand), "stateStack").GetValue(null);
+                var stateStack = Rand.stateStack;
                 if (stateStack?.Any() == true)
                 {
                     Rand.PopState();
@@ -656,13 +629,12 @@ public static class Page_CreateWorldParams_Patch
             }
             else
             {
-                Log.Error("Error: " + ex);
+                Log.Error($"Error: {ex}");
             }
         }
         finally
         {
-            var stateStack =
-                (Stack<ulong>)AccessTools.Field(typeof(Rand), "stateStack").GetValue(null);
+            var stateStack = Rand.stateStack;
             if (stateStack?.Any() == true)
             {
                 Rand.PopState();
@@ -731,26 +703,18 @@ public static class Page_CreateWorldParams_Patch
             tmpWorldGenerationPreset.Init();
         }
 
-        var planetCoverage =
-            (float)AccessTools.Field(typeof(Page_CreateWorldParams), "planetCoverage").GetValue(window);
-        var seedString =
-            (string)AccessTools.Field(typeof(Page_CreateWorldParams), "seedString").GetValue(window);
-        var rainfall =
-            (OverallRainfall)AccessTools.Field(typeof(Page_CreateWorldParams), "rainfall").GetValue(window);
-        var temperature =
-            (OverallTemperature)AccessTools.Field(typeof(Page_CreateWorldParams), "temperature").GetValue(window);
-        var population =
-            (OverallPopulation)AccessTools.Field(typeof(Page_CreateWorldParams), "population").GetValue(window);
-        var factionCounts =
-            (Dictionary<FactionDef, int>)AccessTools.Field(typeof(Page_CreateWorldParams), "factionCounts")
-                .GetValue(window);
+        tmpWorldGenerationPreset.factionCounts = new List<string>();
+        window.initialFactions.ForEach(faction => tmpWorldGenerationPreset.factionCounts.Add(faction.defName));
+        tmpWorldGenerationPreset.temperature = window.temperature;
+        tmpWorldGenerationPreset.seedString = window.seedString;
+        tmpWorldGenerationPreset.planetCoverage = window.planetCoverage;
+        tmpWorldGenerationPreset.rainfall = window.rainfall;
+        tmpWorldGenerationPreset.population = window.population;
 
-        tmpWorldGenerationPreset.factionCounts = factionCounts.ToDictionary(x => x.Key.defName, y => y.Value);
-        tmpWorldGenerationPreset.temperature = temperature;
-        tmpWorldGenerationPreset.seedString = seedString;
-        tmpWorldGenerationPreset.planetCoverage = planetCoverage;
-        tmpWorldGenerationPreset.rainfall = rainfall;
-        tmpWorldGenerationPreset.population = population;
+        if (ModsConfig.BiotechActive)
+        {
+            tmpWorldGenerationPreset.pollution = window.pollution;
+        }
     }
 
     private static void DoSlider(float x, ref float num, float width2, string label, ref float field, string leftLabel)
@@ -782,7 +746,7 @@ public static class Page_CreateWorldParams_Patch
         Widgets.Label(biomeCommonalityLabel, "RG.Commonality".Translate());
         var biomeCommonalitySlider = new Rect(biomeCommonalityLabel.xMax + 5, num, 340, 30f);
         tmpWorldGenerationPreset.biomeCommonalities[biomeDef.defName] =
-            (int)Widgets.HorizontalSlider(biomeCommonalitySlider, value, 0, 20, false, (value * 10) + "%");
+            (int)Widgets.HorizontalSlider(biomeCommonalitySlider, value, 0, 20, false, $"{value * 10}%");
         GUI.color = Color.white;
         num += 30f;
 

@@ -15,9 +15,8 @@ public static class GenerateRoadEndpoints_Patch
         var methodToHook = AccessTools.Method(typeof(FloatRange), "get_RandomInRange");
         var codes = instructions.ToList();
         var found = false;
-        for (var i = 0; i < codes.Count; i++)
+        foreach (var code in codes)
         {
-            var code = codes[i];
             yield return code;
             if (found || !code.Calls(methodToHook))
             {

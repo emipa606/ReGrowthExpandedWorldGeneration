@@ -30,9 +30,8 @@ internal static class WorldGenStep_Roads_GenerateRoadEndpoints_Patch
     {
         var codes = instructions.ToList();
         var found = false;
-        for (var i = 0; i < codes.Count; i++)
+        foreach (var code in codes)
         {
-            var code = codes[i];
             yield return code;
             if (found || !code.OperandIs(0.05f))
             {

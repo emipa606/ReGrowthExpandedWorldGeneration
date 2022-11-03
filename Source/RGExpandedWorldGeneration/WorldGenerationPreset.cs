@@ -13,10 +13,11 @@ public class WorldGenerationPreset : IExposable
     public AxialTilt axialTilt;
     public Dictionary<string, int> biomeCommonalities;
     public Dictionary<string, int> biomeScoreOffsets;
-    public Dictionary<string, int> factionCounts;
+    public List<string> factionCounts;
     public float factionRoadDensity;
     public float mountainDensity;
     public float planetCoverage;
+    public float pollution;
     public OverallPopulation population;
     public OverallRainfall rainfall;
     public float riverDensity;
@@ -26,7 +27,7 @@ public class WorldGenerationPreset : IExposable
 
     public void ExposeData()
     {
-        Scribe_Collections.Look(ref factionCounts, "factionCounts", LookMode.Value, LookMode.Value);
+        Scribe_Collections.Look(ref factionCounts, "factionCountsStrings", LookMode.Value);
         Scribe_Collections.Look(ref biomeCommonalities, "biomeCommonalities", LookMode.Value, LookMode.Value);
         Scribe_Collections.Look(ref biomeScoreOffsets, "biomeScoreOffsets", LookMode.Value, LookMode.Value);
         Scribe_Values.Look(ref seedString, "seedString");
@@ -40,6 +41,7 @@ public class WorldGenerationPreset : IExposable
         Scribe_Values.Look(ref mountainDensity, "mountainDensity");
         Scribe_Values.Look(ref seaLevel, "seaLevel");
         Scribe_Values.Look(ref axialTilt, "axialTilt");
+        Scribe_Values.Look(ref pollution, "pollution");
     }
 
     public void Init()
@@ -50,6 +52,11 @@ public class WorldGenerationPreset : IExposable
         temperature = OverallTemperature.Normal;
         population = OverallPopulation.Normal;
         axialTilt = AxialTilt.Normal;
+        if (ModsConfig.BiotechActive)
+        {
+            pollution = 0.5f;
+        }
+
         ResetFactionCounts();
         Reset();
     }
@@ -62,6 +69,11 @@ public class WorldGenerationPreset : IExposable
         mountainDensity = 1f;
         seaLevel = 1f;
         axialTilt = AxialTilt.Normal;
+        if (ModsConfig.BiotechActive)
+        {
+            pollution = 0.5f;
+        }
+
         ResetBiomeCommonalities();
         ResetBiomeScoreOffsets();
     }
@@ -73,12 +85,12 @@ public class WorldGenerationPreset : IExposable
             || population != other.population || riverDensity != other.riverDensity ||
             ancientRoadDensity != other.ancientRoadDensity
             || factionRoadDensity != other.factionRoadDensity || mountainDensity != other.mountainDensity ||
-            seaLevel != other.seaLevel || axialTilt != other.axialTilt)
+            seaLevel != other.seaLevel || axialTilt != other.axialTilt || pollution != other.pollution)
         {
             return true;
         }
 
-        if (factionCounts.Count != other.factionCounts.Count || !factionCounts.ContentEquals(other.factionCounts))
+        if (factionCounts.Count != other.factionCounts.Count || !factionCounts.SetsEqual(other.factionCounts))
         {
             return true;
         }
@@ -89,20 +101,15 @@ public class WorldGenerationPreset : IExposable
             return true;
         }
 
-        if (biomeScoreOffsets.Count != other.biomeScoreOffsets.Count ||
-            !biomeScoreOffsets.ContentEquals(other.biomeScoreOffsets))
-        {
-            return true;
-        }
-
-        return false;
+        return biomeScoreOffsets.Count != other.biomeScoreOffsets.Count ||
+               !biomeScoreOffsets.ContentEquals(other.biomeScoreOffsets);
     }
 
     public WorldGenerationPreset MakeCopy()
     {
         var copy = new WorldGenerationPreset
         {
-            factionCounts = factionCounts.ToDictionary(x => x.Key, y => y.Value),
+            factionCounts = factionCounts,
             biomeCommonalities = biomeCommonalities.ToDictionary(x => x.Key, y => y.Value),
             biomeScoreOffsets = biomeScoreOffsets.ToDictionary(x => x.Key, y => y.Value),
             seedString = seedString,
@@ -115,17 +122,21 @@ public class WorldGenerationPreset : IExposable
             factionRoadDensity = factionRoadDensity,
             mountainDensity = mountainDensity,
             seaLevel = seaLevel,
-            axialTilt = axialTilt
+            axialTilt = axialTilt,
+            pollution = pollution
         };
         return copy;
     }
 
     private void ResetFactionCounts()
     {
-        factionCounts = new Dictionary<string, int>();
+        factionCounts = new List<string>();
         foreach (var configurableFaction in FactionGenerator.ConfigurableFactions)
         {
-            factionCounts.Add(configurableFaction.defName, configurableFaction.startingCountAtWorldCreation);
+            for (var i = 0; i < configurableFaction.startingCountAtWorldCreation; i++)
+            {
+                factionCounts.Add(configurableFaction.defName);
+            }
         }
     }
 
@@ -175,6 +186,10 @@ public class WorldGenerationPreset : IExposable
         factionRoadDensity = 1f + Rand.Range(-0.5f, 0.5f);
         mountainDensity = 1f + Rand.Range(-0.5f, 0.5f);
         seaLevel = 1f + Rand.Range(-0.25f, 0.25f);
+        if (ModsConfig.BiotechActive)
+        {
+            pollution = Rand.Range(0, 1f);
+        }
 
         axialTilt = RandomEnum<AxialTilt>();
         rainfall = RandomEnum<OverallRainfall>();

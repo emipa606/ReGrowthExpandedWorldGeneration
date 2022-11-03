@@ -30,29 +30,28 @@ public static class RimWar_Patch
     {
         var codes = instructions.ToList();
 
-        for (var i = 0; i < codes.Count; i++)
+        foreach (var codeInstruction in codes)
         {
-            var code = codes[i];
-            if (codes[i].opcode == OpCodes.Ldc_R4)
+            if (codeInstruction.opcode == OpCodes.Ldc_R4)
             {
-                if (codes[i].OperandIs(118))
+                if (codeInstruction.OperandIs(118))
                 {
                     yield return new CodeInstruction(OpCodes.Ldsfld,
                         AccessTools.Field(typeof(RimWar_Patch), "yOffset"));
                 }
-                else if (codes[i].OperandIs(0))
+                else if (codeInstruction.OperandIs(0))
                 {
                     yield return new CodeInstruction(OpCodes.Ldsfld,
                         AccessTools.Field(typeof(RimWar_Patch), "xOffset"));
                 }
                 else
                 {
-                    yield return code;
+                    yield return codeInstruction;
                 }
             }
             else
             {
-                yield return code;
+                yield return codeInstruction;
             }
         }
     }

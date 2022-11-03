@@ -20,8 +20,8 @@ public static class BiomeFrom_Patch
         {
             var code = codes[i];
             yield return code;
-            if (found || codes[i].opcode != OpCodes.Stloc_S || codes[i].operand is not LocalBuilder lb ||
-                lb.LocalIndex != 5 || !codes[i - 1].Calls(methodToHook))
+            if (found || codes[i].opcode != OpCodes.Stloc_S || codes[i].operand is not LocalBuilder { LocalIndex: 5 } ||
+                !codes[i - 1].Calls(methodToHook))
             {
                 continue;
             }
