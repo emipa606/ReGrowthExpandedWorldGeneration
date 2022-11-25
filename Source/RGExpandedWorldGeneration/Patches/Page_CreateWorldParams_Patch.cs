@@ -67,6 +67,12 @@ public static class Page_CreateWorldParams_Patch
             AccessTools.Method(typeof(Page_CreateWorldParams_Patch), "DoGlobeCoverageSlider");
         var doGuiMethod = AccessTools.Method(typeof(Page_CreateWorldParams_Patch), "DoGui");
         var endGroupMethod = AccessTools.Method(typeof(Widgets), "EndGroup");
+        var biotechCheckMethod = AccessTools.PropertyGetter(typeof(ModsConfig), "BiotechActive");
+        if (biotechCheckMethod == null)
+        {
+            Log.Message("No biotechCheckMethod found");
+        }
+
         var codes = instructions.ToList();
         var found = false;
 
@@ -89,9 +95,16 @@ public static class Page_CreateWorldParams_Patch
                 yield return code;
             }
 
-            if (found || i + 1 < codes.Count && !codes[i + 1].Calls(endGroupMethod))
+            if (found)
             {
                 continue;
+            }
+
+            switch (ModsConfig.BiotechActive)
+            {
+                case true when i + 1 < codes.Count && !codes[i + 1].Calls(endGroupMethod):
+                case false when i + 2 < codes.Count && !codes[i + 2].Calls(biotechCheckMethod):
+                    continue;
             }
 
             yield return new CodeInstruction(OpCodes.Ldarg_0);
