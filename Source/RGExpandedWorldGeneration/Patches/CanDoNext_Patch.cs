@@ -11,6 +11,7 @@ public static class CanDoNext_Patch
         if (Page_CreateWorldParams_Patch.thread != null)
         {
             Page_CreateWorldParams_Patch.thread.Abort();
+            Page_CreateWorldParams_Patch.thread.Join(1000);
             Page_CreateWorldParams_Patch.thread = null;
         }
 
