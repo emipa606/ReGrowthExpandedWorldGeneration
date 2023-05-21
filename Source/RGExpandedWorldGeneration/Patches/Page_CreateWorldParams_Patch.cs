@@ -295,6 +295,7 @@ public static class Page_CreateWorldParams_Patch
             if (thread != null)
             {
                 thread.Abort();
+                thread.Join(1000);
                 thread = null;
             }
         }
@@ -439,6 +440,7 @@ public static class Page_CreateWorldParams_Patch
         if (thread is { IsAlive: true })
         {
             thread.Abort();
+            thread.Join(1000);
             generatingWorld = false;
         }
 
