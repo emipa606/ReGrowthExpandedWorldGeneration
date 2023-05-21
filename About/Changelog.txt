@@ -1,5 +1,8 @@
 # Changelog for ReGrowthExpandedWorldGeneration
 
+1.4.3 - Should now abort preview thread correctly, thanks m00nl1ght-dev!
+
+
 1.4.2 - Should now work correctly when Biotech is not active
 
 

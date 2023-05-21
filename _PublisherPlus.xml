@@ -3,6 +3,8 @@
   <Excluded>
     <exclude>E:\SteamLibrary\steamapps\common\RimWorld\Mods\ReGrowthExpandedWorldGeneration\.gitignore</exclude>
     <exclude>E:\SteamLibrary\steamapps\common\RimWorld\Mods\ReGrowthExpandedWorldGeneration\.git</exclude>
+    <exclude>E:\SteamLibrary\steamapps\common\RimWorld\Mods\ReGrowthExpandedWorldGeneration\.gitmodules</exclude>
+    <exclude>E:\SteamLibrary\steamapps\common\RimWorld\Mods\ReGrowthExpandedWorldGeneration\.gitattributes</exclude>
     <exclude>E:\SteamLibrary\steamapps\common\RimWorld\Mods\ReGrowthExpandedWorldGeneration\Source</exclude>
   </Excluded>
 </Configuration>

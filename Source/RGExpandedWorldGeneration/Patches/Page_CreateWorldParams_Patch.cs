@@ -202,7 +202,7 @@ public static class Page_CreateWorldParams_Patch
     {
         var planetCoverage =
             (float)AccessTools.Field(typeof(Page_CreateWorldParams), "planetCoverage").GetValue(window);
-        var value = (double)Widgets.HorizontalSlider(rect, planetCoverage, 0.05f, 1, false,
+        var value = (double)Widgets.HorizontalSlider_NewTemp(rect, planetCoverage, 0.05f, 1, false,
             $"{planetCoverage * 100}%", "RG.Small".Translate(), "RG.Large".Translate()) * 100;
         AccessTools.Field(typeof(Page_CreateWorldParams), "planetCoverage")
             .SetValue(window, (float)Math.Round(value / 5) * 5 / 100);
@@ -226,7 +226,7 @@ public static class Page_CreateWorldParams_Patch
             labelRect = new Rect(0, num, 200f, 30f);
             var slider = new Rect(labelRect.xMax, num, width2, 30f);
             Widgets.Label(labelRect, "RG.AxialTilt".Translate());
-            tmpWorldGenerationPreset.axialTilt = (AxialTilt)Mathf.RoundToInt(Widgets.HorizontalSlider(slider,
+            tmpWorldGenerationPreset.axialTilt = (AxialTilt)Mathf.RoundToInt(Widgets.HorizontalSlider_NewTemp(slider,
                 (float)tmpWorldGenerationPreset.axialTilt, 0f, AxialTiltUtility.EnumValuesCount - 1, true,
                 "PlanetRainfall_Normal".Translate(), "PlanetRainfall_Low".Translate(),
                 "PlanetRainfall_High".Translate(), 1f));
@@ -247,7 +247,7 @@ public static class Page_CreateWorldParams_Patch
             labelRect = new Rect(0, num, 200f, 30f);
             var slider = new Rect(labelRect.xMax, num, 256, 30f);
             Widgets.Label(labelRect, "RG.AxialTilt".Translate());
-            tmpWorldGenerationPreset.axialTilt = (AxialTilt)Mathf.RoundToInt(Widgets.HorizontalSlider(slider,
+            tmpWorldGenerationPreset.axialTilt = (AxialTilt)Mathf.RoundToInt(Widgets.HorizontalSlider_NewTemp(slider,
                 (float)tmpWorldGenerationPreset.axialTilt, 0f, AxialTiltUtility.EnumValuesCount - 1, true,
                 "PlanetRainfall_Normal".Translate(), "PlanetRainfall_Low".Translate(),
                 "PlanetRainfall_High".Translate(), 1f));
@@ -408,7 +408,7 @@ public static class Page_CreateWorldParams_Patch
         labelRect = new Rect(previewAreaRect.x - 55, numY, 200f, 30f);
         var slider = new Rect(labelRect.xMax, numY, 256, 30f);
         Widgets.Label(labelRect, "RG.AxialTilt".Translate());
-        tmpWorldGenerationPreset.axialTilt = (AxialTilt)Mathf.RoundToInt(Widgets.HorizontalSlider(slider,
+        tmpWorldGenerationPreset.axialTilt = (AxialTilt)Mathf.RoundToInt(Widgets.HorizontalSlider_NewTemp(slider,
             (float)tmpWorldGenerationPreset.axialTilt, 0f, AxialTiltUtility.EnumValuesCount - 1, true,
             "PlanetRainfall_Normal".Translate(), "PlanetRainfall_Low".Translate(),
             "PlanetRainfall_High".Translate(), 1f));
@@ -738,7 +738,7 @@ public static class Page_CreateWorldParams_Patch
         var labelRect = new Rect(x, num, 200f, 30f);
         Widgets.Label(labelRect, label);
         var slider = new Rect(labelRect.xMax, num, width2, 30f);
-        field = Widgets.HorizontalSlider(slider, field, 0, 2f, true,
+        field = Widgets.HorizontalSlider_NewTemp(slider, field, 0, 2f, true,
             "PlanetRainfall_Normal".Translate(), leftLabel, "PlanetRainfall_High".Translate(), 0.1f);
     }
 
@@ -761,7 +761,7 @@ public static class Page_CreateWorldParams_Patch
         Widgets.Label(biomeCommonalityLabel, "RG.Commonality".Translate());
         var biomeCommonalitySlider = new Rect(biomeCommonalityLabel.xMax + 5, num, 340, 30f);
         tmpWorldGenerationPreset.biomeCommonalities[biomeDef.defName] =
-            (int)Widgets.HorizontalSlider(biomeCommonalitySlider, value, 0, 20, false, $"{value * 10}%");
+            (int)Widgets.HorizontalSlider_NewTemp(biomeCommonalitySlider, value, 0, 20, false, $"{value * 10}%");
         GUI.color = Color.white;
         num += 30f;
 
@@ -779,7 +779,7 @@ public static class Page_CreateWorldParams_Patch
         Widgets.Label(biomeOffsetLabel, "RG.ScoreOffset".Translate());
         var scoreOffsetSlider = new Rect(biomeOffsetLabel.xMax + 5, biomeCommonalitySlider.yMax, 340, 30f);
         tmpWorldGenerationPreset.biomeScoreOffsets[biomeDef.defName] =
-            (int)Widgets.HorizontalSlider(scoreOffsetSlider, value2, -99, 99, false, value2.ToString());
+            (int)Widgets.HorizontalSlider_NewTemp(scoreOffsetSlider, value2, -99, 99, false, value2.ToString());
         GUI.color = Color.white;
         num += 50f;
     }
