@@ -35,10 +35,6 @@ public static class Page_CreateWorldParams_Patch
 
     public static Texture2D worldPreview;
 
-    public static bool isActive;
-
-    public static bool hidePreview;
-
     private static World threadedWorld;
 
     public static Thread thread;
@@ -210,7 +206,6 @@ public static class Page_CreateWorldParams_Patch
 
     private static void DoGui(Page_CreateWorldParams window, ref float num, float width2)
     {
-        isActive = true;
         UpdateCurPreset(window);
         DoSlider(0, ref num, width2, "RG.RiverDensity".Translate(), ref tmpWorldGenerationPreset.riverDensity,
             "None".Translate());
@@ -232,27 +227,7 @@ public static class Page_CreateWorldParams_Patch
                 "PlanetRainfall_High".Translate(), 1f));
         }
 
-        if (hidePreview)
-        {
-            DoSlider(0, ref num, width2, "RG.AncientRoadDensity".Translate(),
-                ref tmpWorldGenerationPreset.ancientRoadDensity, "None".Translate());
-            DoSlider(0, ref num, width2, "RG.FactionRoadDensity".Translate(),
-                ref tmpWorldGenerationPreset.factionRoadDensity, "None".Translate());
-            if (!ModCompat.MyLittlePlanetActive)
-            {
-                return;
-            }
-
-            num += 40;
-            labelRect = new Rect(0, num, 200f, 30f);
-            var slider = new Rect(labelRect.xMax, num, 256, 30f);
-            Widgets.Label(labelRect, "RG.AxialTilt".Translate());
-            tmpWorldGenerationPreset.axialTilt = (AxialTilt)Mathf.RoundToInt(Widgets.HorizontalSlider_NewTemp(slider,
-                (float)tmpWorldGenerationPreset.axialTilt, 0f, AxialTiltUtility.EnumValuesCount - 1, true,
-                "PlanetRainfall_Normal".Translate(), "PlanetRainfall_Low".Translate(),
-                "PlanetRainfall_High".Translate(), 1f));
-        }
-        else
+        if (RGExpandedWorldGenerationSettingsMod.settings.showPreview)
         {
             labelRect = new Rect(0f, num + 64, 80, 30);
             Widgets.Label(labelRect, "RG.Biomes".Translate());
@@ -282,6 +257,26 @@ public static class Page_CreateWorldParams_Patch
                     tmpWorldGenerationPreset.ResetBiomeScoreOffsets();
                 }
             }
+        }
+        else
+        {
+            DoSlider(0, ref num, width2, "RG.AncientRoadDensity".Translate(),
+                ref tmpWorldGenerationPreset.ancientRoadDensity, "None".Translate());
+            DoSlider(0, ref num, width2, "RG.FactionRoadDensity".Translate(),
+                ref tmpWorldGenerationPreset.factionRoadDensity, "None".Translate());
+            if (!ModCompat.MyLittlePlanetActive)
+            {
+                return;
+            }
+
+            num += 40;
+            labelRect = new Rect(0, num, 200f, 30f);
+            var slider = new Rect(labelRect.xMax, num, 256, 30f);
+            Widgets.Label(labelRect, "RG.AxialTilt".Translate());
+            tmpWorldGenerationPreset.axialTilt = (AxialTilt)Mathf.RoundToInt(Widgets.HorizontalSlider_NewTemp(slider,
+                (float)tmpWorldGenerationPreset.axialTilt, 0f, AxialTiltUtility.EnumValuesCount - 1, true,
+                "PlanetRainfall_Normal".Translate(), "PlanetRainfall_Low".Translate(),
+                "PlanetRainfall_High".Translate(), 1f));
         }
 
         if (RGExpandedWorldGenerationSettings.curWorldGenerationPreset is null)
@@ -323,95 +318,95 @@ public static class Page_CreateWorldParams_Patch
         hideButtonRect.x += generateButtonRect.width * 1.1f;
         DrawHidePreviewButton(window, hideButtonRect);
         Rect labelRect;
-        if (hidePreview)
+        if (RGExpandedWorldGenerationSettingsMod.settings.showPreview)
         {
-            labelRect = new Rect(previewAreaRect.x - 55, previewAreaRect.y + hideButtonRect.height,
-                455, 25);
-            Widgets.Label(labelRect, "RG.Biomes".Translate());
-            var outRect = new Rect(labelRect.x, labelRect.yMax - 3, labelRect.width,
-                previewAreaRect.height);
-            var viewRect = new Rect(outRect.x, outRect.y, outRect.width - 16f,
-                (DefDatabase<BiomeDef>.DefCount * 90) + 10);
-            var rect3 = new Rect(outRect.xMax - 200f - 16f, labelRect.y, 200f, Text.LineHeight);
-
-            Widgets.DrawBoxSolid(new Rect(outRect.x, outRect.y, outRect.width - 16f, outRect.height), BackgroundColor);
-            Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
-            var num = outRect.y + 15;
-            foreach (var biomeDef in DefDatabase<BiomeDef>.AllDefs.OrderBy(x => x.label ?? x.defName))
+            DrawGeneratePreviewButton(window, generateButtonRect);
+            var numAttempt = 0;
+            if (thread is null && Find.World != null && Find.World.info.name != "DefaultWorldName" ||
+                worldPreview != null)
             {
-                DoBiomeSliders(biomeDef, labelRect.x + 10, ref num,
-                    biomeDef.label?.CapitalizeFirst() ?? biomeDef.defName);
-            }
-
-            Widgets.EndScrollView();
-            if (tmpWorldGenerationPreset.biomeCommonalities.All(x => x.Value == 10) &&
-                tmpWorldGenerationPreset.biomeScoreOffsets.All(y => y.Value == 0))
-            {
-                return;
-            }
-
-            if (!Widgets.ButtonText(rect3, "RG.ResetBiomesToDefault".Translate()))
-            {
-                return;
-            }
-
-            tmpWorldGenerationPreset.ResetBiomeCommonalities();
-            tmpWorldGenerationPreset.ResetBiomeScoreOffsets();
-            return;
-        }
-
-        DrawGeneratePreviewButton(window, generateButtonRect);
-        var numAttempt = 0;
-        if (thread is null && Find.World != null && Find.World.info.name != "DefaultWorldName" ||
-            worldPreview != null)
-        {
-            if (dirty)
-            {
-                while (numAttempt < 5)
+                if (dirty)
                 {
-                    worldPreview = GetWorldCameraPreview(WorldCameraHeight, WorldCameraWidth);
-                    if (IsBlack(worldPreview))
+                    while (numAttempt < 5)
                     {
-                        numAttempt++;
+                        worldPreview = GetWorldCameraPreview(WorldCameraHeight, WorldCameraWidth);
+                        if (IsBlack(worldPreview))
+                        {
+                            numAttempt++;
+                        }
+                        else
+                        {
+                            dirty = false;
+                            break;
+                        }
                     }
-                    else
-                    {
-                        dirty = false;
-                        break;
-                    }
+                }
+
+                if (worldPreview != null)
+                {
+                    GUI.DrawTexture(previewAreaRect, worldPreview);
                 }
             }
 
-            if (worldPreview != null)
+            var numY = previewAreaRect.yMax - 40;
+            if (tmpWorldGenerationPreset == null)
             {
-                GUI.DrawTexture(previewAreaRect, worldPreview);
+                tmpWorldGenerationPreset = new WorldGenerationPreset();
             }
+
+            DoSlider(previewAreaRect.x - 55, ref numY, 256, "RG.AncientRoadDensity".Translate(),
+                ref tmpWorldGenerationPreset.ancientRoadDensity, "None".Translate());
+            DoSlider(previewAreaRect.x - 55, ref numY, 256, "RG.FactionRoadDensity".Translate(),
+                ref tmpWorldGenerationPreset.factionRoadDensity, "None".Translate());
+
+            if (!ModCompat.MyLittlePlanetActive)
+            {
+                return;
+            }
+
+            numY += 40;
+            labelRect = new Rect(previewAreaRect.x - 55, numY, 200f, 30f);
+            var slider = new Rect(labelRect.xMax, numY, 256, 30f);
+            Widgets.Label(labelRect, "RG.AxialTilt".Translate());
+            tmpWorldGenerationPreset.axialTilt = (AxialTilt)Mathf.RoundToInt(Widgets.HorizontalSlider_NewTemp(slider,
+                (float)tmpWorldGenerationPreset.axialTilt, 0f, AxialTiltUtility.EnumValuesCount - 1, true,
+                "PlanetRainfall_Normal".Translate(), "PlanetRainfall_Low".Translate(),
+                "PlanetRainfall_High".Translate(), 1f));
+            return;
         }
 
-        var numY = previewAreaRect.yMax - 40;
-        if (tmpWorldGenerationPreset == null)
+        labelRect = new Rect(previewAreaRect.x - 55, previewAreaRect.y + hideButtonRect.height,
+            455, 25);
+        Widgets.Label(labelRect, "RG.Biomes".Translate());
+        var outRect = new Rect(labelRect.x, labelRect.yMax - 3, labelRect.width,
+            previewAreaRect.height);
+        var viewRect = new Rect(outRect.x, outRect.y, outRect.width - 16f,
+            (DefDatabase<BiomeDef>.DefCount * 90) + 10);
+        var rect3 = new Rect(outRect.xMax - 200f - 16f, labelRect.y, 200f, Text.LineHeight);
+
+        Widgets.DrawBoxSolid(new Rect(outRect.x, outRect.y, outRect.width - 16f, outRect.height), BackgroundColor);
+        Widgets.BeginScrollView(outRect, ref scrollPosition, viewRect);
+        var num = outRect.y + 15;
+        foreach (var biomeDef in DefDatabase<BiomeDef>.AllDefs.OrderBy(x => x.label ?? x.defName))
         {
-            tmpWorldGenerationPreset = new WorldGenerationPreset();
+            DoBiomeSliders(biomeDef, labelRect.x + 10, ref num,
+                biomeDef.label?.CapitalizeFirst() ?? biomeDef.defName);
         }
 
-        DoSlider(previewAreaRect.x - 55, ref numY, 256, "RG.AncientRoadDensity".Translate(),
-            ref tmpWorldGenerationPreset.ancientRoadDensity, "None".Translate());
-        DoSlider(previewAreaRect.x - 55, ref numY, 256, "RG.FactionRoadDensity".Translate(),
-            ref tmpWorldGenerationPreset.factionRoadDensity, "None".Translate());
-
-        if (!ModCompat.MyLittlePlanetActive)
+        Widgets.EndScrollView();
+        if (tmpWorldGenerationPreset.biomeCommonalities.All(x => x.Value == 10) &&
+            tmpWorldGenerationPreset.biomeScoreOffsets.All(y => y.Value == 0))
         {
             return;
         }
 
-        numY += 40;
-        labelRect = new Rect(previewAreaRect.x - 55, numY, 200f, 30f);
-        var slider = new Rect(labelRect.xMax, numY, 256, 30f);
-        Widgets.Label(labelRect, "RG.AxialTilt".Translate());
-        tmpWorldGenerationPreset.axialTilt = (AxialTilt)Mathf.RoundToInt(Widgets.HorizontalSlider_NewTemp(slider,
-            (float)tmpWorldGenerationPreset.axialTilt, 0f, AxialTiltUtility.EnumValuesCount - 1, true,
-            "PlanetRainfall_Normal".Translate(), "PlanetRainfall_Low".Translate(),
-            "PlanetRainfall_High".Translate(), 1f));
+        if (!Widgets.ButtonText(rect3, "RG.ResetBiomesToDefault".Translate()))
+        {
+            return;
+        }
+
+        tmpWorldGenerationPreset.ResetBiomeCommonalities();
+        tmpWorldGenerationPreset.ResetBiomeScoreOffsets();
     }
 
     public static void ApplyChanges(Page_CreateWorldParams window)
@@ -444,7 +439,7 @@ public static class Page_CreateWorldParams_Patch
             generatingWorld = false;
         }
 
-        if (hidePreview)
+        if (!RGExpandedWorldGenerationSettingsMod.settings.showPreview)
         {
             return;
         }
@@ -456,15 +451,17 @@ public static class Page_CreateWorldParams_Patch
     private static void DrawHidePreviewButton(Page_CreateWorldParams window, Rect hideButtonRect)
     {
         var buttonTexture = Visible;
-        if (hidePreview)
+        if (!RGExpandedWorldGenerationSettingsMod.settings.showPreview)
         {
             buttonTexture = InVisible;
         }
 
         if (Widgets.ButtonImageFitted(hideButtonRect, buttonTexture))
         {
-            hidePreview = !hidePreview;
-            if (!hidePreview)
+            RGExpandedWorldGenerationSettingsMod.settings.showPreview =
+                !RGExpandedWorldGenerationSettingsMod.settings.showPreview;
+            RGExpandedWorldGenerationSettingsMod.settings.Write();
+            if (RGExpandedWorldGenerationSettingsMod.settings.showPreview)
             {
                 StartRefreshWorldPreview(window);
             }

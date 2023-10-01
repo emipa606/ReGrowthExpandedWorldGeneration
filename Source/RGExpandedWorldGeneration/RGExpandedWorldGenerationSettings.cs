@@ -7,16 +7,13 @@ internal class RGExpandedWorldGenerationSettings : ModSettings
 {
     public static WorldGenerationPreset curWorldGenerationPreset;
 
-    public Dictionary<string, WorldGenerationPreset> presets;
-
-    public RGExpandedWorldGenerationSettings()
-    {
-        presets = new Dictionary<string, WorldGenerationPreset>();
-    }
+    public Dictionary<string, WorldGenerationPreset> presets = new Dictionary<string, WorldGenerationPreset>();
+    public bool showPreview = true;
 
     public override void ExposeData()
     {
         base.ExposeData();
         Scribe_Collections.Look(ref presets, "presets", LookMode.Value, LookMode.Deep);
+        Scribe_Values.Look(ref showPreview, "showPreview", true);
     }
 }

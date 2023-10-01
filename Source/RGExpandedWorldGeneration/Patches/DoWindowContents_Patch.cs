@@ -12,7 +12,7 @@ public static class DoWindowContents_Patch
     public static void Prefix(ref Rect rect)
     {
         var modifier = 0;
-        if (Page_CreateWorldParams_Patch.hidePreview)
+        if (!RGExpandedWorldGenerationSettingsMod.settings.showPreview)
         {
             modifier = 85;
         }

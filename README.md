@@ -142,4 +142,5 @@ https://discord.gg/7befJWr9xS]![Image](https://i.imgur.com/cfoFEMA.png)
 
 
 
-https://steamcommunity.com/sharedfiles/filedetails/changelog/2791768296]Last updated 2023-05-21
+https://steamcommunity.com/sharedfiles/filedetails/changelog/2791768296]![Image](https://img.shields.io/github/v/release/emipa606/ReGrowthExpandedWorldGeneration?label=latest%20version&style=plastic&color=9f1111&labelColor=black)
+
