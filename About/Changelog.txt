@@ -1,5 +1,8 @@
 # Changelog for ReGrowthExpandedWorldGeneration
 
+1.5.1 - Fixed the preview image
+
+
 1.5.0 - Updated for 1.5
 
 
