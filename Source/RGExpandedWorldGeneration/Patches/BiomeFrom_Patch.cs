@@ -7,7 +7,7 @@ using RimWorld.Planet;
 
 namespace RGExpandedWorldGeneration;
 
-[HarmonyPatch(typeof(WorldGenStep_Terrain), "BiomeFrom")]
+[HarmonyPatch(typeof(WorldGenStep_Terrain), nameof(WorldGenStep_Terrain.BiomeFrom))]
 public static class BiomeFrom_Patch
 {
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)

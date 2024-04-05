@@ -29,12 +29,12 @@ public abstract class Dialog_PresetList : Window
 
     private static readonly Color DefaultFileTextColor = new Color(1f, 1f, 0.6f);
 
+    protected readonly Page_CreateWorldParams parent;
+
     protected float bottomAreaHeight;
 
     private bool focusedNameArea;
     protected string interactButLabel = "Error";
-
-    protected Page_CreateWorldParams parent;
 
     protected Vector2 scrollPosition = Vector2.zero;
 
@@ -82,7 +82,7 @@ public abstract class Dialog_PresetList : Window
 
                 GUI.BeginGroup(rect);
                 var rect2 = new Rect(rect.width - 36f, (rect.height - 36f) / 2f, 36f, 36f);
-                if (Widgets.ButtonImage(rect2, TexButton.DeleteX, Color.white, GenUI.SubtleMouseoverColor))
+                if (Widgets.ButtonImage(rect2, TexButton.Delete, Color.white, GenUI.SubtleMouseoverColor))
                 {
                     Find.WindowStack.Add(Dialog_MessageBox.CreateConfirmation("ConfirmDelete".Translate(preset),
                         delegate { RGExpandedWorldGenerationSettingsMod.settings.presets.Remove(preset); }, true));

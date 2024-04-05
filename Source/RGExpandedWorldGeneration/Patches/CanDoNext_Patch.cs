@@ -3,7 +3,7 @@ using RimWorld;
 
 namespace RGExpandedWorldGeneration;
 
-[HarmonyPatch(typeof(Page_CreateWorldParams), "CanDoNext")]
+[HarmonyPatch(typeof(Page_CreateWorldParams), nameof(Page_CreateWorldParams.CanDoNext))]
 public static class CanDoNext_Patch
 {
     public static void Prefix()

@@ -6,7 +6,7 @@ using Verse;
 
 namespace RGExpandedWorldGeneration;
 
-[HarmonyPatch(typeof(WorldGenStep_Rivers), "GenerateRivers")]
+[HarmonyPatch(typeof(WorldGenStep_Rivers), nameof(WorldGenStep_Rivers.GenerateRivers))]
 public static class GenerateRivers_Patch
 {
     [HarmonyPriority(Priority.First)]
@@ -33,23 +33,24 @@ public static class GenerateRivers_Patch
         }
     }
 
-    private static void Postfix(Dictionary<RiverDef, RiverData> __state)
-    {
-        __state = new Dictionary<RiverDef, RiverData>();
-        foreach (var data in __state)
-        {
-            data.Key.spawnChance = data.Value.spawnChance;
-            if (data.Key.branches == null)
-            {
-                continue;
-            }
+    //private static void Postfix(Dictionary<RiverDef, RiverData> __state)
+    //{
+    //    __state = new Dictionary<RiverDef, RiverData>();
 
-            for (var i = 0; i < data.Key.branches.Count; i++)
-            {
-                data.Key.branches[i].chance = data.Value.branchChance[i];
-            }
-        }
-    }
+    //    foreach (var data in __state)
+    //    {
+    //        data.Key.spawnChance = data.Value.spawnChance;
+    //        if (data.Key.branches == null)
+    //        {
+    //            continue;
+    //        }
+
+    //        for (var i = 0; i < data.Key.branches.Count; i++)
+    //        {
+    //            data.Key.branches[i].chance = data.Value.branchChance[i];
+    //        }
+    //    }
+    //}
 
     public struct RiverData
     {

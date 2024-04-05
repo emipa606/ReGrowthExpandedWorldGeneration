@@ -3,7 +3,7 @@ using Verse;
 
 namespace RGExpandedWorldGeneration;
 
-[HarmonyPatch(typeof(GenTemperature), "SeasonalShiftAmplitudeAt", null)]
+[HarmonyPatch(typeof(GenTemperature), nameof(GenTemperature.SeasonalShiftAmplitudeAt), null)]
 public static class GenTemperature_SeasonalShiftAmplitudeAt
 {
     public static bool Prefix()

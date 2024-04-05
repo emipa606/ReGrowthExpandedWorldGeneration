@@ -3,7 +3,7 @@ using RimWorld;
 
 namespace RGExpandedWorldGeneration;
 
-[HarmonyPatch(typeof(Page_CreateWorldParams), "Reset")]
+[HarmonyPatch(typeof(Page_CreateWorldParams), nameof(Page_CreateWorldParams.Reset))]
 public static class Reset_Patch
 {
     public static void Postfix()

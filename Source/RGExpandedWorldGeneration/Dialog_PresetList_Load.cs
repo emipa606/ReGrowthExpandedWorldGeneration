@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using RimWorld;
+﻿using RimWorld;
 using Verse;
 
 namespace RGExpandedWorldGeneration;
@@ -17,7 +16,7 @@ public class Dialog_PresetList_Load : Dialog_PresetList
             RGExpandedWorldGenerationSettingsMod.settings.presets[name];
         Page_CreateWorldParams_Patch.ApplyChanges(parent);
 
-        parent.factions = new List<FactionDef>();
+        parent.factions = [];
         Page_CreateWorldParams_Patch.tmpWorldGenerationPreset.factionCounts.ForEach(factionDef =>
             parent.factions.Add(FactionDef.Named(factionDef)));
         Close();

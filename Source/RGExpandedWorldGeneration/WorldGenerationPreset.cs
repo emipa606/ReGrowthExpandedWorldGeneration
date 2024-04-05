@@ -130,7 +130,7 @@ public class WorldGenerationPreset : IExposable
 
     private void ResetFactionCounts()
     {
-        factionCounts = new List<string>();
+        factionCounts = [];
         foreach (var configurableFaction in FactionGenerator.ConfigurableFactions)
         {
             for (var i = 0; i < configurableFaction.startingCountAtWorldCreation; i++)

@@ -8,12 +8,12 @@ using Verse.Noise;
 
 namespace RGExpandedWorldGeneration;
 
-[HarmonyPatch(typeof(WorldGenStep_Terrain), "GenerateTileFor")]
+[HarmonyPatch(typeof(WorldGenStep_Terrain), nameof(WorldGenStep_Terrain.GenerateTileFor))]
 public static class GenerateTileFor_Patch
 {
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        var methodToHook = AccessTools.Method(typeof(ModuleBase), "GetValue", new[] { typeof(Vector3) });
+        var methodToHook = AccessTools.Method(typeof(ModuleBase), "GetValue", [typeof(Vector3)]);
         var noiseMountainLinesField = AccessTools.Field(typeof(WorldGenStep_Terrain), "noiseMountainLines");
         var codes = instructions.ToList();
         for (var i = 0; i < codes.Count; i++)

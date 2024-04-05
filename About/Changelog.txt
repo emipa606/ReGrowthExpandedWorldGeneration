@@ -1,5 +1,8 @@
 # Changelog for ReGrowthExpandedWorldGeneration
 
+1.5.0 - Updated for 1.5
+
+
 1.4.4 - Preview setting will now be remembered between game-starts
 
 

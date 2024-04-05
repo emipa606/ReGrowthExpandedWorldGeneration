@@ -6,47 +6,42 @@ namespace RGExpandedWorldGeneration;
 
 public class WorldComponent_WorldGenerator : WorldComponent
 {
-    public static Dictionary<AxialTilt, SimpleCurve> mappedValues = new Dictionary<AxialTilt, SimpleCurve>
+    public static readonly Dictionary<AxialTilt, SimpleCurve> mappedValues = new Dictionary<AxialTilt, SimpleCurve>
     {
         {
-            AxialTilt.VeryLow, new SimpleCurve
-            {
+            AxialTilt.VeryLow, [
                 new CurvePoint(0f, 0.75f),
                 new CurvePoint(0.1f, 1f),
                 new CurvePoint(1f, 7f)
-            }
+            ]
         },
         {
-            AxialTilt.Low, new SimpleCurve
-            {
+            AxialTilt.Low, [
                 new CurvePoint(0f, 1.5f),
                 new CurvePoint(0.1f, 2f),
                 new CurvePoint(1f, 14f)
-            }
+            ]
         },
         {
-            AxialTilt.Normal, new SimpleCurve
-            {
+            AxialTilt.Normal, [
                 new CurvePoint(0f, 3f),
                 new CurvePoint(0.1f, 4f),
                 new CurvePoint(1f, 28f)
-            }
+            ]
         },
         {
-            AxialTilt.High, new SimpleCurve
-            {
+            AxialTilt.High, [
                 new CurvePoint(0f, 4.5f),
                 new CurvePoint(0.1f, 6f),
                 new CurvePoint(1f, 42f)
-            }
+            ]
         },
         {
-            AxialTilt.VeryHigh, new SimpleCurve
-            {
+            AxialTilt.VeryHigh, [
                 new CurvePoint(0f, 6f),
                 new CurvePoint(0.1f, 8f),
                 new CurvePoint(1f, 56f)
-            }
+            ]
         }
     };
 

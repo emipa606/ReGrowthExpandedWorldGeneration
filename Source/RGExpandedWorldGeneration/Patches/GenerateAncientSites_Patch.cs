@@ -4,7 +4,7 @@ using Verse;
 
 namespace RGExpandedWorldGeneration;
 
-[HarmonyPatch(typeof(WorldGenStep_AncientSites), "GenerateAncientSites")]
+[HarmonyPatch(typeof(WorldGenStep_AncientSites), nameof(WorldGenStep_AncientSites.GenerateAncientSites))]
 public static class GenerateAncientSites_Patch
 {
     private static void Prefix(WorldGenStep_AncientSites __instance, out FloatRange __state)

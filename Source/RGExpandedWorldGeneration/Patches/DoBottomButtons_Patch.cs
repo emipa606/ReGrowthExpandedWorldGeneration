@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace RGExpandedWorldGeneration;
 
-[HarmonyPatch(typeof(Page), "DoBottomButtons")]
+[HarmonyPatch(typeof(Page), nameof(Page.DoBottomButtons))]
 public static class DoBottomButtons_Patch
 {
     public static bool Prefix(Page __instance, Rect rect, string nextLabel = null, string midLabel = null,

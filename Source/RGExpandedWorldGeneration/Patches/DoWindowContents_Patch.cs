@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace RGExpandedWorldGeneration;
 
-[HarmonyPatch(typeof(WorldFactionsUIUtility), "DoWindowContents")]
+[HarmonyPatch(typeof(WorldFactionsUIUtility), nameof(WorldFactionsUIUtility.DoWindowContents))]
 public static class DoWindowContents_Patch
 {
     public const float LowerWidgetHeight = 210;

@@ -3,7 +3,7 @@ using Verse;
 
 namespace RGExpandedWorldGeneration;
 
-[HarmonyPatch(typeof(Rand), "EnsureStateStackEmpty")]
+[HarmonyPatch(typeof(Rand), nameof(Rand.EnsureStateStackEmpty))]
 public static class EnsureStateStackEmpty_Patch
 {
     public static bool Prefix()

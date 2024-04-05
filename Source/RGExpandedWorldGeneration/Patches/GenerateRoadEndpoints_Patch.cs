@@ -7,7 +7,7 @@ using Verse;
 
 namespace RGExpandedWorldGeneration;
 
-[HarmonyPatch(typeof(WorldGenStep_Roads), "GenerateRoadEndpoints")]
+[HarmonyPatch(typeof(WorldGenStep_Roads), nameof(WorldGenStep_Roads.GenerateRoadEndpoints))]
 public static class GenerateRoadEndpoints_Patch
 {
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
