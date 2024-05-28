@@ -10,6 +10,7 @@ public static class RegenerateNow_Patch
 {
     public static bool Prefix()
     {
-        return !Page_CreateWorldParams_Patch.dirty || Find.WindowStack.WindowOfType<Page_CreateWorldParams>() == null;
+        return !Page_CreateWorldParams_DoWindowContents.dirty ||
+               Find.WindowStack.WindowOfType<Page_CreateWorldParams>() == null;
     }
 }

@@ -37,12 +37,12 @@ public static class RimWar_Patch
                 if (codeInstruction.OperandIs(118))
                 {
                     yield return new CodeInstruction(OpCodes.Ldsfld,
-                        AccessTools.Field(typeof(RimWar_Patch), "yOffset"));
+                        AccessTools.Field(typeof(RimWar_Patch), nameof(yOffset)));
                 }
                 else if (codeInstruction.OperandIs(0))
                 {
                     yield return new CodeInstruction(OpCodes.Ldsfld,
-                        AccessTools.Field(typeof(RimWar_Patch), "xOffset"));
+                        AccessTools.Field(typeof(RimWar_Patch), nameof(xOffset)));
                 }
                 else
                 {

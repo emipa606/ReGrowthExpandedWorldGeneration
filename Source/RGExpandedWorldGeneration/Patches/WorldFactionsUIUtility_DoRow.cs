@@ -5,7 +5,7 @@ using UnityEngine;
 namespace RGExpandedWorldGeneration;
 
 [HarmonyPatch(typeof(WorldFactionsUIUtility), nameof(WorldFactionsUIUtility.DoRow))]
-public static class DoRow_Patch
+public static class WorldFactionsUIUtility_DoRow
 {
     public static void Prefix(ref Rect rect)
     {

@@ -12,12 +12,12 @@ public class Dialog_PresetList_Load : Dialog_PresetList
 
     protected override void DoPresetInteraction(string name)
     {
-        Page_CreateWorldParams_Patch.tmpWorldGenerationPreset =
+        Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset =
             RGExpandedWorldGenerationSettingsMod.settings.presets[name];
-        Page_CreateWorldParams_Patch.ApplyChanges(parent);
+        Page_CreateWorldParams_DoWindowContents.ApplyChanges(parent);
 
         parent.factions = [];
-        Page_CreateWorldParams_Patch.tmpWorldGenerationPreset.factionCounts.ForEach(factionDef =>
+        Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.factionCounts.ForEach(factionDef =>
             parent.factions.Add(FactionDef.Named(factionDef)));
         Close();
     }

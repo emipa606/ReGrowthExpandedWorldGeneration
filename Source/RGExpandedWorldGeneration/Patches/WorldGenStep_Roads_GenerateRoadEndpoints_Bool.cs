@@ -8,7 +8,7 @@ using RimWorld.Planet;
 namespace RGExpandedWorldGeneration;
 
 [HarmonyPatch]
-internal static class WorldGenStep_Roads_GenerateRoadEndpoints_Patch
+internal static class WorldGenStep_Roads_GenerateRoadEndpoints_Bool
 {
     private static MethodBase TargetMethod()
     {
@@ -39,8 +39,8 @@ internal static class WorldGenStep_Roads_GenerateRoadEndpoints_Patch
             }
 
             yield return new CodeInstruction(OpCodes.Ldsfld,
-                AccessTools.Field(typeof(Page_CreateWorldParams_Patch),
-                    nameof(Page_CreateWorldParams_Patch.tmpWorldGenerationPreset)));
+                AccessTools.Field(typeof(Page_CreateWorldParams_DoWindowContents),
+                    nameof(Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset)));
             yield return new CodeInstruction(OpCodes.Ldfld,
                 AccessTools.Field(typeof(WorldGenerationPreset), nameof(WorldGenerationPreset.factionRoadDensity)));
             yield return new CodeInstruction(OpCodes.Div);

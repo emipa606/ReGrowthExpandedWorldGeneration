@@ -9,13 +9,13 @@ public static class SetupElevationNoise_Patch
 {
     public static void Prefix(ref FloatRange ___ElevationRange)
     {
-        if (Page_CreateWorldParams_Patch.tmpWorldGenerationPreset is null)
+        if (Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset is null)
         {
-            Page_CreateWorldParams_Patch.tmpWorldGenerationPreset = new WorldGenerationPreset();
-            Page_CreateWorldParams_Patch.tmpWorldGenerationPreset.Init();
+            Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset = new WorldGenerationPreset();
+            Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.Init();
         }
 
         ___ElevationRange =
-            new FloatRange(-500f * Page_CreateWorldParams_Patch.tmpWorldGenerationPreset.seaLevel, 5000f);
+            new FloatRange(-500f * Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.seaLevel, 5000f);
     }
 }

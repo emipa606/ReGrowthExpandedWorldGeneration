@@ -1,7 +1,6 @@
-# ReGrowthExpandedWorldGeneration
+# [ReGrowth: Expanded World Generation (Continued)](https://steamcommunity.com/sharedfiles/filedetails/?id=2791768296)
 
 ![Image](https://i.imgur.com/buuPQel.png)
-
 Update of Helixien, Taranchuks mod
 https://steamcommunity.com/sharedfiles/filedetails/?id=2607979870
 with permission
@@ -11,10 +10,8 @@ with permission
 - German translation added, thank you triestar1!
 
 ![Image](https://i.imgur.com/pufA0kM.png)
-
 	
 ![Image](https://i.imgur.com/Z4GOv8H.png)
-
 **UPDATE 07.04.2022:** As of now this mod is officially discontinued and will not receive any updates or bug fixies. At the same time, I am making the mod "open-source", for a lack of better words, meaning anyone can change, expand and re-upload the mod as long as you:
 
 - Keep the name
@@ -22,10 +19,9 @@ with permission
 - Link back to the old mod in the credits.
 
 The entire mod, including code, can be found here:
-https://github.com/Helixien/ReGrowth-Expanded-World-Generation]https://github.com/Helixien/ReGrowth-Expanded-World-Generation
+[https://github.com/Helixien/ReGrowth-Expanded-World-Generation](https://github.com/Helixien/ReGrowth-Expanded-World-Generation)
 
 ![Image](https://i.imgur.com/7w5OFgC.png)
-
 
 You can see all changes in the changelog tab!
 
@@ -35,7 +31,6 @@ You can see all changes in the changelog tab!
 The mod is in beta! It works fine 95% of the time, but there might be bugs we haven't yet found and some things probably could be fine tuned and optimized. 
 
 ![Image](https://i.imgur.com/Pe8cTXc.png)
-
 
 # What is ReGrowth: Expanded World Generation?
 
@@ -47,7 +42,6 @@ If your answer is yes, then **ReGrowth: Expanded World Generation** is the mod f
 Enjoy!
 
 ![Image](https://i.imgur.com/uWt5Qba.png)
-
 
 Here is an overview over everything you can control with **ReGrowth: Expanded World Generation**:
 
@@ -77,7 +71,6 @@ I also want to be clear that this mod has NO training wheels. You can go crazy w
 
 ![Image](https://i.imgur.com/QnAx6zL.png)
 
-
 We tried to make it work with as many other mods we could right away, here is a list:
 
 - Realistic Planets
@@ -92,7 +85,6 @@ However there are mods that are, as of now, not working with it:
 - Prepare Landing: We tried to make it work, but they must look into it from their side.
 
 ![Image](https://i.imgur.com/toezrwG.png)
-
 
 **Q: Can this mod be added to an existing save?**
 A: Yes, but it doesnt really help you in any way.
@@ -120,28 +112,24 @@ A: No!
 
 ![Image](https://i.imgur.com/fXBb4DJ.png)
 
-
 - C# Code done by Taranchuk. This is his masterpiece, I just had the idea! If you love the mod, please show him your love!
 
 Rimworld is owned by Tynan Sylvester and he wants you to finally buy his book!  
 
 
-https://discord.gg/7befJWr9xS]![Image](https://i.imgur.com/cfoFEMA.png)
-
+[https://discord.gg/7befJWr9xS]![Image]((https://i.imgur.com/cfoFEMA.png))
 
 ![Image](https://i.imgur.com/PwoNOj4.png)
 
 
-
 -  See if the the error persists if you just have this mod and its requirements active.
 -  If not, try adding your other mods until it happens again.
--  Post your error-log using https://steamcommunity.com/workshop/filedetails/?id=818773962]HugsLib or the standalone https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404]Uploader and command Ctrl+F12
+-  Post your error-log using [https://steamcommunity.com/workshop/filedetails/?id=818773962]HugsLib[/url] or the standalone [url=https://steamcommunity.com/sharedfiles/filedetails/?id=2873415404](Uploader) and command Ctrl+F12
 -  For best support, please use the Discord-channel for error-reporting.
 -  Do not report errors by making a discussion-thread, I get no notification of that.
 -  If you have the solution for a problem, please post it to the GitHub repository.
--  Use https://github.com/RimSort/RimSort/releases/latest]RimSort to sort your mods
+-  Use [https://github.com/RimSort/RimSort/releases/latest](RimSort) to sort your mods
 
 
 
-https://steamcommunity.com/sharedfiles/filedetails/changelog/2791768296]![Image](https://img.shields.io/github/v/release/emipa606/ReGrowthExpandedWorldGeneration?label=latest%20version&style=plastic&color=9f1111&labelColor=black)
-
+[https://steamcommunity.com/sharedfiles/filedetails/changelog/2791768296]![Image]((https://img.shields.io/github/v/release/emipa606/ReGrowthExpandedWorldGeneration?label=latest%20version&style=plastic&color=9f1111&labelColor=black))

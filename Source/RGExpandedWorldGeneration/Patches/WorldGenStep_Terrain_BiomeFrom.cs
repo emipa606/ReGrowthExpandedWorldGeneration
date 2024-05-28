@@ -8,12 +8,13 @@ using RimWorld.Planet;
 namespace RGExpandedWorldGeneration;
 
 [HarmonyPatch(typeof(WorldGenStep_Terrain), nameof(WorldGenStep_Terrain.BiomeFrom))]
-public static class BiomeFrom_Patch
+public static class WorldGenStep_Terrain_BiomeFrom
 {
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        var methodToHook = AccessTools.Method(typeof(BiomeWorker), "GetScore");
-        var getScoreAdjustedMethod = AccessTools.Method(typeof(BiomeFrom_Patch), "GetScoreAdjusted");
+        var methodToHook = AccessTools.Method(typeof(BiomeWorker), nameof(BiomeWorker.GetScore));
+        var getScoreAdjustedMethod =
+            AccessTools.Method(typeof(WorldGenStep_Terrain_BiomeFrom), nameof(GetScoreAdjusted));
         var codes = instructions.ToList();
         var found = false;
         for (var i = 0; i < codes.Count; i++)
@@ -36,32 +37,35 @@ public static class BiomeFrom_Patch
 
     private static float GetScoreAdjusted(BiomeDef biomeDef, float score)
     {
-        if (!Page_CreateWorldParams_Patch.tmpWorldGenerationPreset.biomeScoreOffsets?.ContainsKey(biomeDef.defName) ==
+        if (!Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.biomeScoreOffsets?.ContainsKey(
+                biomeDef.defName) ==
             true)
         {
-            Page_CreateWorldParams_Patch.tmpWorldGenerationPreset.biomeScoreOffsets[biomeDef.defName] = 0;
+            Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.biomeScoreOffsets[biomeDef.defName] = 0;
         }
 
-        if (!Page_CreateWorldParams_Patch.tmpWorldGenerationPreset.biomeCommonalities?.ContainsKey(biomeDef.defName) ==
+        if (!Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.biomeCommonalities?.ContainsKey(
+                biomeDef.defName) ==
             true)
         {
-            Page_CreateWorldParams_Patch.tmpWorldGenerationPreset.biomeCommonalities[biomeDef.defName] = 10;
+            Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.biomeCommonalities[biomeDef.defName] = 10;
         }
 
-        if (Page_CreateWorldParams_Patch.tmpWorldGenerationPreset.biomeScoreOffsets == null)
+        if (Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.biomeScoreOffsets == null)
         {
             return score;
         }
 
-        var scoreOffset = Page_CreateWorldParams_Patch.tmpWorldGenerationPreset.biomeScoreOffsets[biomeDef.defName];
+        var scoreOffset =
+            Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.biomeScoreOffsets[biomeDef.defName];
         score += scoreOffset;
-        if (Page_CreateWorldParams_Patch.tmpWorldGenerationPreset.biomeCommonalities == null)
+        if (Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.biomeCommonalities == null)
         {
             return score;
         }
 
         var biomeCommonalityOverride =
-            Page_CreateWorldParams_Patch.tmpWorldGenerationPreset.biomeCommonalities[biomeDef.defName] / 10f;
+            Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.biomeCommonalities[biomeDef.defName] / 10f;
         if (biomeCommonalityOverride == 0)
         {
             if (scoreOffset != 0)

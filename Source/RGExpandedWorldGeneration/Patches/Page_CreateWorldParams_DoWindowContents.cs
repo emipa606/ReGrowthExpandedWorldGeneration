@@ -15,7 +15,7 @@ namespace RGExpandedWorldGeneration;
 
 [StaticConstructorOnStartup]
 [HarmonyPatch(typeof(Page_CreateWorldParams), nameof(Page_CreateWorldParams.DoWindowContents))]
-public static class Page_CreateWorldParams_Patch
+public static class Page_CreateWorldParams_DoWindowContents
 {
     public const int WorldCameraHeight = 315;
     public const int WorldCameraWidth = 315;
@@ -58,12 +58,13 @@ public static class Page_CreateWorldParams_Patch
 
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
-        var planetCoverage = AccessTools.Field(typeof(Page_CreateWorldParams), "planetCoverage");
+        var planetCoverage =
+            AccessTools.Field(typeof(Page_CreateWorldParams), nameof(Page_CreateWorldParams.planetCoverage));
         var doGlobeCoverageSliderMethod =
-            AccessTools.Method(typeof(Page_CreateWorldParams_Patch), "DoGlobeCoverageSlider");
-        var doGuiMethod = AccessTools.Method(typeof(Page_CreateWorldParams_Patch), "DoGui");
-        var endGroupMethod = AccessTools.Method(typeof(Widgets), "EndGroup");
-        var biotechCheckMethod = AccessTools.PropertyGetter(typeof(ModsConfig), "BiotechActive");
+            AccessTools.Method(typeof(Page_CreateWorldParams_DoWindowContents), "DoGlobeCoverageSlider");
+        var doGuiMethod = AccessTools.Method(typeof(Page_CreateWorldParams_DoWindowContents), nameof(DoGui));
+        var endGroupMethod = AccessTools.Method(typeof(Widgets), nameof(Widgets.EndGroup));
+        var biotechCheckMethod = AccessTools.PropertyGetter(typeof(ModsConfig), nameof(ModsConfig.BiotechActive));
         if (biotechCheckMethod == null)
         {
             Log.Message("No biotechCheckMethod found");
@@ -81,7 +82,8 @@ public static class Page_CreateWorldParams_Patch
             {
                 var i1 = i;
                 i += codes.FirstIndexOf(x =>
-                    x.Calls(AccessTools.Method(typeof(WindowStack), "Add")) && codes.IndexOf(x) > i1) - i;
+                    x.Calls(AccessTools.Method(typeof(WindowStack), nameof(WindowStack.Add))) &&
+                    codes.IndexOf(x) > i1) - i;
                 yield return new CodeInstruction(OpCodes.Ldarg_0);
                 yield return new CodeInstruction(OpCodes.Ldloc_S, 11);
                 yield return new CodeInstruction(OpCodes.Call, doGlobeCoverageSliderMethod);
@@ -117,10 +119,12 @@ public static class Page_CreateWorldParams_Patch
         var y = rect.y + rect.height - 38f;
         Text.Font = GameFont.Small;
         string label = "Back".Translate();
-        var canDoBackMethod = AccessTools.Method(typeof(Page_CreateWorldParams), "CanDoBack");
-        var doBackMethod = AccessTools.Method(typeof(Page_CreateWorldParams), "DoBack");
-        var canDoNextMethod = AccessTools.Method(typeof(Page_CreateWorldParams), "CanDoNext");
-        var doNextMethod = AccessTools.Method(typeof(Page_CreateWorldParams), "DoNext");
+        var canDoBackMethod =
+            AccessTools.Method(typeof(Page_CreateWorldParams), nameof(Page_CreateWorldParams.CanDoBack));
+        var doBackMethod = AccessTools.Method(typeof(Page_CreateWorldParams), nameof(Page_CreateWorldParams.DoBack));
+        var canDoNextMethod =
+            AccessTools.Method(typeof(Page_CreateWorldParams), nameof(Page_CreateWorldParams.CanDoNext));
+        var doNextMethod = AccessTools.Method(typeof(Page_CreateWorldParams), nameof(Page_CreateWorldParams.DoNext));
         var buttonSpacer = Page.BottomButSize.x + 15;
         var currentX = rect.x;
         var backRect = new Rect(currentX, y, Page.BottomButSize.x, Page.BottomButSize.y);
@@ -197,10 +201,11 @@ public static class Page_CreateWorldParams_Patch
     private static void DoGlobeCoverageSlider(Page_CreateWorldParams window, Rect rect)
     {
         var planetCoverage =
-            (float)AccessTools.Field(typeof(Page_CreateWorldParams), "planetCoverage").GetValue(window);
+            (float)AccessTools.Field(typeof(Page_CreateWorldParams), nameof(Page_CreateWorldParams.planetCoverage))
+                .GetValue(window);
         var value = (double)Widgets.HorizontalSlider(rect, planetCoverage, 0.05f, 1, false,
             $"{planetCoverage * 100}%", "RG.Small".Translate(), "RG.Large".Translate()) * 100;
-        AccessTools.Field(typeof(Page_CreateWorldParams), "planetCoverage")
+        AccessTools.Field(typeof(Page_CreateWorldParams), nameof(Page_CreateWorldParams.planetCoverage))
             .SetValue(window, (float)Math.Round(value / 5) * 5 / 100);
     }
 
@@ -232,7 +237,7 @@ public static class Page_CreateWorldParams_Patch
             labelRect = new Rect(0f, num + 64, 80, 30);
             Widgets.Label(labelRect, "RG.Biomes".Translate());
             var outRect = new Rect(labelRect.x, labelRect.yMax - 3, width2 + 195,
-                DoWindowContents_Patch.LowerWidgetHeight - 50);
+                WorldFactionsUIUtility_DoWindowContents.LowerWidgetHeight - 50);
             var viewRect = new Rect(outRect.x, outRect.y, outRect.width - 16f,
                 (DefDatabase<BiomeDef>.DefCount * 90) + 10);
             var rect3 = new Rect(outRect.xMax - 200f - 16f, labelRect.y, 200f, Text.LineHeight);
@@ -519,7 +524,8 @@ public static class Page_CreateWorldParams_Patch
 
     private static void InitializeWorld()
     {
-        var layers = (List<WorldLayer>)AccessTools.Field(typeof(WorldRenderer), "layers").GetValue(Find.World.renderer);
+        var layers = (List<WorldLayer>)AccessTools.Field(typeof(WorldRenderer), nameof(WorldRenderer.layers))
+            .GetValue(Find.World.renderer);
         foreach (var layer in layers)
         {
             if (layer is WorldLayer_Hills || layer is WorldLayer_Rivers || layer is WorldLayer_Roads ||
@@ -677,9 +683,10 @@ public static class Page_CreateWorldParams_Patch
         Find.World.renderer.wantedMode = WorldRenderMode.Planet;
         Find.WorldCamera.gameObject.SetActive(true);
         Find.World.UI.Reset();
-        AccessTools.Field(typeof(WorldCameraDriver), "desiredAltitude").SetValue(Find.WorldCameraDriver, 800);
+        AccessTools.Field(typeof(WorldCameraDriver), nameof(WorldCameraDriver.desiredAltitude))
+            .SetValue(Find.WorldCameraDriver, 800);
         Find.WorldCameraDriver.altitude = 800;
-        AccessTools.Method(typeof(WorldCameraDriver), "ApplyPositionToGameObject")
+        AccessTools.Method(typeof(WorldCameraDriver), nameof(WorldCameraDriver.ApplyPositionToGameObject))
             .Invoke(Find.WorldCameraDriver, []);
 
         var rect = new Rect(0, 0, width, height);

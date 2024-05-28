@@ -8,9 +8,9 @@ public static class Reset_Patch
 {
     public static void Postfix()
     {
-        if (Page_CreateWorldParams_Patch.tmpWorldGenerationPreset != null)
+        if (Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset != null)
         {
-            Page_CreateWorldParams_Patch.tmpWorldGenerationPreset.Reset();
+            Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.Reset();
         }
     }
 }
