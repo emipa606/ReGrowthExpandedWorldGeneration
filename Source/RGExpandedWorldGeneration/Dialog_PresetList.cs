@@ -7,25 +7,25 @@ namespace RGExpandedWorldGeneration;
 
 public abstract class Dialog_PresetList : Window
 {
-    protected const float EntryHeight = 40f;
+    private const float EntryHeight = 40f;
 
-    protected const float FileNameLeftMargin = 8f;
+    private const float FileNameLeftMargin = 8f;
 
-    protected const float FileNameRightMargin = 4f;
+    private const float FileNameRightMargin = 4f;
 
-    protected const float FileInfoWidth = 94f;
+    private const float FileInfoWidth = 94f;
 
-    protected const float InteractButWidth = 100f;
+    private const float InteractButWidth = 100f;
 
-    protected const float InteractButHeight = 36f;
+    private const float InteractButHeight = 36f;
 
     protected const float DeleteButSize = 36f;
 
-    protected const float NameTextFieldWidth = 400f;
+    private const float NameTextFieldWidth = 400f;
 
-    protected const float NameTextFieldHeight = 35f;
+    private const float NameTextFieldHeight = 35f;
 
-    protected const float NameTextFieldButtonSpace = 20f;
+    private const float NameTextFieldButtonSpace = 20f;
 
     private static readonly Color DefaultFileTextColor = new(1f, 1f, 0.6f);
 
@@ -36,11 +36,11 @@ public abstract class Dialog_PresetList : Window
     private bool focusedNameArea;
     protected string interactButLabel = "Error";
 
-    protected Vector2 scrollPosition = Vector2.zero;
+    private Vector2 scrollPosition = Vector2.zero;
 
-    protected string typingName = "";
+    private string typingName = "";
 
-    public Dialog_PresetList(Page_CreateWorldParams parent)
+    protected Dialog_PresetList(Page_CreateWorldParams parent)
     {
         doCloseButton = true;
         doCloseX = true;

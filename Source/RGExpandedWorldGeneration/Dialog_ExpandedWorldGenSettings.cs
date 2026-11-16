@@ -91,8 +91,6 @@ public class Dialog_ExpandedWorldGenSettings : Window
             "None".Translate());
 
         // Axial Tilt (only if not using My Little Planet)
-        //if (!ModCompat.MyLittlePlanetActive)
-        //{
         num += RowHeight;
         var labelRect = new Rect(0, num, LabelWidth, 30f);
         var slider = new Rect(labelRect.xMax, num, SliderWidth, 30f);
@@ -104,7 +102,6 @@ public class Dialog_ExpandedWorldGenSettings : Window
                 "PlanetRainfall_Normal".Translate(),
                 "PlanetRainfall_Low".Translate(),
                 "PlanetRainfall_High".Translate(), 1f));
-        //}
 
         Widgets.EndScrollView();
 

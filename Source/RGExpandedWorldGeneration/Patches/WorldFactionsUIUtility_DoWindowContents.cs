@@ -7,7 +7,7 @@ namespace RGExpandedWorldGeneration;
 [HarmonyPatch(typeof(WorldFactionsUIUtility), nameof(WorldFactionsUIUtility.DoWindowContents))]
 public static class WorldFactionsUIUtility_DoWindowContents
 {
-    public const float LowerWidgetHeight = 210;
+    private const float LowerWidgetHeight = 210;
 
     public static void Prefix(ref Rect rect)
     {

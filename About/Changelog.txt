@@ -1,5 +1,8 @@
 # Changelog for ReGrowthExpandedWorldGeneration
 
+1.7.0 - Mod updated for 1.7 and passed autotests
+
+
 1.6.2 - Added back axial tilt when My Little Planet is active. Not sure why it was excluded in the first place.
 
 

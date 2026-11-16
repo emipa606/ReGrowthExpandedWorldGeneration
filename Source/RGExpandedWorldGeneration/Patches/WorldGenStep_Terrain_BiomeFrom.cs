@@ -10,7 +10,7 @@ namespace RGExpandedWorldGeneration;
 [HarmonyPatch(typeof(WorldGenStep_Terrain), nameof(WorldGenStep_Terrain.BiomeFrom))]
 public static class WorldGenStep_Terrain_BiomeFrom
 {
-    private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         var methodToHook = AccessTools.Method(typeof(BiomeWorker), nameof(BiomeWorker.GetScore));
         var getScoreAdjustedMethod =
@@ -41,14 +41,14 @@ public static class WorldGenStep_Terrain_BiomeFrom
                 biomeDef.defName) ==
             true)
         {
-            Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.biomeScoreOffsets[biomeDef.defName] = 0;
+            Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.biomeScoreOffsets?[biomeDef.defName] = 0;
         }
 
         if (!Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.biomeCommonalities?.ContainsKey(
                 biomeDef.defName) ==
             true)
         {
-            Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.biomeCommonalities[biomeDef.defName] = 10;
+            Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.biomeCommonalities?[biomeDef.defName] = 10;
         }
 
         if (Page_CreateWorldParams_DoWindowContents.tmpWorldGenerationPreset.biomeScoreOffsets == null)

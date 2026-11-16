@@ -73,7 +73,7 @@ public static class Page_CreateWorldParams_DoWindowContents
             select x).ToList());
 
 
-    private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         var planetCoverage =
             AccessTools.Field(typeof(Page_CreateWorldParams), nameof(Page_CreateWorldParams.planetCoverage));
@@ -167,7 +167,7 @@ public static class Page_CreateWorldParams_DoWindowContents
         var currentX = rect.x;
         var backRect = new Rect(currentX, y, Page.BottomButSize.x, Page.BottomButSize.y);
         if ((Widgets.ButtonText(backRect, label)
-             || KeyBindingDefOf.Cancel.KeyDownEvent) && (bool)canDoBackMethod.Invoke(window, []))
+             || KeyBindingDefOf.Cancel.KeyDownEvent) && (bool)(canDoBackMethod.Invoke(window, []) ?? false))
         {
             doBackMethod.Invoke(window, []);
         }
@@ -181,7 +181,7 @@ public static class Page_CreateWorldParams_DoWindowContents
 
             var rect2 = new Rect(rect.xMax - Page.BottomButSize.x, y, Page.BottomButSize.x, Page.BottomButSize.y);
             if ((Widgets.ButtonText(rect2, nextLabel) || doNextOnKeypress && KeyBindingDefOf.Accept.KeyDownEvent) &&
-                (bool)canDoNextMethod.Invoke(window, []))
+                (bool)(canDoNextMethod.Invoke(window, []) ?? false))
             {
                 Log.Message("[RG] DoBottomButtons: Next button pressed, setting nextPressed to true");
                 startFresh = true;
@@ -224,7 +224,7 @@ public static class Page_CreateWorldParams_DoWindowContents
         ApplyChanges(window);
     }
 
-    private static void Postfix(Page_CreateWorldParams __instance)
+    public static void Postfix(Page_CreateWorldParams __instance)
     {
         if (startFresh)
         {
@@ -234,7 +234,7 @@ public static class Page_CreateWorldParams_DoWindowContents
         doWorldPreviewArea(__instance);
     }
 
-    private static void Prefix()
+    public static void Prefix()
     {
         // If returning from next page, force a complete preview regeneration
         if (!startFresh)
@@ -252,8 +252,8 @@ public static class Page_CreateWorldParams_DoWindowContents
     private static void DoGlobeCoverageSlider(Page_CreateWorldParams window, Rect rect)
     {
         var planetCoverage =
-            (float)AccessTools.Field(typeof(Page_CreateWorldParams), nameof(Page_CreateWorldParams.planetCoverage))
-                .GetValue(window);
+            (float)(AccessTools.Field(typeof(Page_CreateWorldParams), nameof(Page_CreateWorldParams.planetCoverage))
+                .GetValue(window) ?? 0.3f);
         var value = (double)Widgets.HorizontalSlider(rect, planetCoverage, 0.05f, 1, false,
             $"{planetCoverage * 100}%", "RG.Small".Translate(), "RG.Large".Translate()) * 100;
         AccessTools.Field(typeof(Page_CreateWorldParams), nameof(Page_CreateWorldParams.planetCoverage))
@@ -522,13 +522,10 @@ public static class Page_CreateWorldParams_DoWindowContents
         if (Mouse.IsOver(generateButtonRect))
         {
             Widgets.DrawHighlightIfMouseover(generateButtonRect);
-            if (Event.current.type == EventType.MouseDown)
+            if (Event.current.type == EventType.MouseDown && Event.current.button == 0)
             {
-                if (Event.current.button == 0)
-                {
-                    startRefreshWorldPreview(window);
-                    Event.current.Use();
-                }
+                startRefreshWorldPreview(window);
+                Event.current.Use();
             }
         }
 
@@ -548,17 +545,15 @@ public static class Page_CreateWorldParams_DoWindowContents
     {
         // Regenerate critical draw layers if available
         var layers = Find.World.renderer.AllDrawLayers;
-        foreach (var layer in layers)
+        foreach (var layer in layers.Where(layer =>
+                     layer is WorldDrawLayer_Hills or WorldDrawLayer_Rivers or WorldDrawLayer_Roads
+                         or WorldDrawLayer_Terrain))
         {
-            if (layer is WorldDrawLayer_Hills or WorldDrawLayer_Rivers or WorldDrawLayer_Roads
-                or WorldDrawLayer_Terrain)
-            {
-                layer.RegenerateNow();
-            }
+            layer.RegenerateNow();
         }
 
         // Safely finalize world components if a world exists
-        if (Find.World == null || Find.World.components == null)
+        if (Find.World.components == null)
         {
             return;
         }
@@ -625,12 +620,6 @@ public static class Page_CreateWorldParams_DoWindowContents
                     name = NameGenerator.GenerateName(RulePackDefOf.NamerWorld)
                 }
             };
-
-            if (Current.CreatingWorld == null)
-            {
-                Log.Error("[RG] generateWorld: Failed to create Current.CreatingWorld");
-                return;
-            }
 
             Log.Message("[RG] generateWorld: Setting up world properties");
             Current.CreatingWorld.factionManager.ofPlayer = prevFaction;
@@ -864,7 +853,7 @@ public static class Page_CreateWorldParams_DoWindowContents
         // Draw dynamic objects/features if available
         try
         {
-            if (Find.World?.dynamicDrawManager != null)
+            if (Find.World.dynamicDrawManager != null)
             {
                 Find.World.dynamicDrawManager.DrawDynamicWorldObjects();
             }
@@ -876,7 +865,7 @@ public static class Page_CreateWorldParams_DoWindowContents
 
         try
         {
-            if (Find.World?.features != null)
+            if (Find.World.features != null)
             {
                 Find.World.features.UpdateFeatures();
             }
@@ -895,7 +884,7 @@ public static class Page_CreateWorldParams_DoWindowContents
         RenderTexture.active = null;
 
         Find.WorldCamera.gameObject.SetActive(false);
-        Find.World?.renderer.wantedMode = WorldRenderMode.None;
+        Find.World.renderer.wantedMode = WorldRenderMode.None;
         return screenShot;
     }
 
@@ -921,22 +910,12 @@ public static class Page_CreateWorldParams_DoWindowContents
         }
 
         // Ensure all biomes have entries in the dictionaries
-        foreach (var biomeDef in DefDatabase<BiomeDef>.AllDefs)
+        foreach (var biomeDef in DefDatabase<BiomeDef>.AllDefs.Select(b => b.defName))
         {
-            tmpWorldGenerationPreset.biomeCommonalities.TryAdd(biomeDef.defName, 10);
+            tmpWorldGenerationPreset.biomeCommonalities.TryAdd(biomeDef, 10);
 
-            tmpWorldGenerationPreset.biomeScoreOffsets.TryAdd(biomeDef.defName, 0);
+            tmpWorldGenerationPreset.biomeScoreOffsets.TryAdd(biomeDef, 0);
         }
-    }
-
-    private static void doSlider(float x, ref float num, float width2, string label, ref float field, string leftLabel)
-    {
-        num += 40f;
-        var labelRect = new Rect(x, num, 200f, 30f);
-        Widgets.Label(labelRect, label);
-        var slider = new Rect(labelRect.xMax, num, width2, 30f);
-        field = Widgets.HorizontalSlider(slider, field, 0, 2f, true,
-            "PlanetRainfall_Normal".Translate(), leftLabel, "PlanetRainfall_High".Translate(), 0.1f);
     }
 
     private static void doBiomeSliders(BiomeDef biomeDef, float x, ref float num, string label)

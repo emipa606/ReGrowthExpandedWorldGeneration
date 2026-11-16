@@ -10,7 +10,7 @@ namespace RGExpandedWorldGeneration;
 [HarmonyPatch]
 internal static class WorldGenStep_Roads_GenerateRoadEndpoints_Bool
 {
-    private static MethodBase TargetMethod()
+    public static MethodBase TargetMethod()
     {
         foreach (var nestType in typeof(WorldGenStep_Roads).GetNestedTypes(AccessTools.all))
         {
@@ -26,7 +26,7 @@ internal static class WorldGenStep_Roads_GenerateRoadEndpoints_Bool
         return null;
     }
 
-    private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         var codes = instructions.ToList();
         var found = false;

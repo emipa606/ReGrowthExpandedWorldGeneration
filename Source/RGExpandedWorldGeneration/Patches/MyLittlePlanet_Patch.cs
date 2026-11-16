@@ -28,6 +28,6 @@ public static class MyLittlePlanet_Patch
     {
         var type = AccessTools.TypeByName("WorldGenRules.RulesOverrider");
         var gameComp = Current.Game.components.First(x => x.GetType().Name.Contains("RulesOverrider"));
-        ___subdivisionsCount = (int)AccessTools.Field(type, "subcount").GetValue(gameComp);
+        ___subdivisionsCount = (int)(AccessTools.Field(type, "subcount").GetValue(gameComp) ?? 1);
     }
 }

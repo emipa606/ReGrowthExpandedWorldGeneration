@@ -2,50 +2,96 @@
 
 ## Mod Overview and Purpose
 
-**ReGrowth: Expanded World Generation (Continued)** is a mod for RimWorld that allows players to customize world generation settings in unprecedented ways. It offers flexibility and control over various world parameters, catering to players' unique preferences whether it's creating a sea world, a Mars-like desert, or a mountainous landscape. Although officially discontinued, the mod is open-source, inviting contributions and expansions by the community.
+ReGrowth: Expanded World Generation is a standalone mod that allows players to customize the world generation of RimWorld. It provides extensive control over various aspects such as global coverage, river density, mountain density, sea level, axial tilt, road density, biomes, factions, and presets. The mod aims to give users the flexibility to create unique and tailored planets for their RimWorld games.
 
 ## Key Features and Systems
 
-- **Global Coverage:** Adjustable slider for world coverage percentage.
-- **River, Mountain, and Road Density:** Customize the density of rivers, mountains, and roads.
-- **Sea Level and Axial Tilt:** Alter the sea level and axial tilt to impact seasonal temperature shifts.
-- **Biome Control:** Modify spawn values of vanilla and modded biomes using multipliers and offsets.
-- **Presets:** Save and load custom world presets for future use or sharing (upcoming feature).
-- **Planet Preview:** Visualize potential outcomes of world settings, albeit with performance considerations.
-- **Compatibility:** Designed to work with various mods like Realistic Planets and My Little Planet.
+### Global Coverage
+A slider that allows users to choose the percentage of the world that should be generated.
+
+### River Density
+A control to adjust the number of rivers in the generated world.
+
+### Mountain Density
+A setting to control the number of mountains in the world.
+
+### Sea Level
+Allows users to set the sea level to rise or fall as desired.
+
+### Axial Tilt
+A feature that works exactly like in Realistic Planets, allowing for extreme seasonal temperature shifts.
+
+### Road Density
+Controls the number of ancient and faction roads in the world.
+
+### Biomes
+Provides detailed controls over each biome, including vanilla and modded ones. Users can set the spawn value using multiplier and offset sliders.
+
+### Factions
+No changes have been made to faction settings; users can use the existing options provided by RimWorld.
+
+### Presets
+Enables users to save and load world generation presets, similar to EdB Prepare Carefully.
+
+### Planet Preview
+A preview feature to visualize the generated planet with the current settings.
 
 ## Coding Patterns and Conventions
 
-- **C# Standards:** Follow standard C# conventions for naming and organizing code.
-- **Modular Code Structure:** Utilize static classes for patches and extensions, maintaining modularity.
-- **Accessibility:** Majority of the core functionality is encapsulated in public static classes and methods.
-- **Consistent Naming:** Prefix classes with file or feature name for ease of navigation.
+### C# Code
+- **Classes and Methods**: The C# code follows a structured approach with clear class and method names.
+- **ModCompat.cs**: Contains harmony patches to ensure compatibility with other mods.
+- **Dialog_PresetList.cs**: Handles the logic for preset list interactions and window contents.
+- **Dialog_PresetList_Load.cs and Dialog_PresetList_Save.cs**: Manage the loading and saving of presets.
 
-## XML Integration
+### XML Integration
+- **About.xml**: Contains metadata about the mod, including dependencies.
 
-- Extend XML files for RimWorld to integrate with mod settings via `Defs`.
-- Define mod settings, such as sliders and buttons, in XML to reflect changes within the UI.
-- Use the `ExposeData()` method for serialization of settings into RimWorld's save system.
-
-## Harmony Patching
-
-- **HarmonyInit:** Essential for initializing Harmony patches that modify or extend game behavior.
-- **Targeted Patching:** Use Harmony to patch specific game methods affecting world generation post.
-- **Compatibility Layers:** Implement specific patches for integration with other mods (e.g., Realistic Planets, RimWar).
+### Harmony Patching
+- **ModCompat.cs**: Contains methods for patching other mods to ensure compatibility.
 
 ## Suggestions for Copilot
 
-- **Automation of Repetitive Tasks:** Use Copilot to scaffold new patch classes and methods by providing method signatures and basic logical structure.
-- **XML Template Generation:** Leverage Copilot to generate XML templates for new mod-specific settings.
-- **Harmony Integration Helper:** Develop context-aware suggestions for common patching patterns, aiding in swift patch development.
-- **Error Resolution Assistance:** Provide context-based resolutions for potential runtime errors, particularly for XML parsing and Harmony conflicts.
-- **Debugging Enhancements:** Suggest augmentations to debug log output, aiding in troubleshooting and performance optimization.
+### General Recommendations
+- **Documentation**: Ensure that all code is well-documented, including method and class purposes, parameters, and return values.
+- **Testing**: Encourage thorough testing of any changes or additions to ensure compatibility and functionality.
+- **Code Review**: Implement a code review process to maintain code quality and consistency.
 
----
+### Specific Recommendations
+- **Compatibility**: Focus on maintaining compatibility with other popular mods like Realistic Planets and My Little Planet.
+- **Performance**: Optimize performance, especially for the planet preview feature, to ensure smooth gameplay.
+- **User Interface**: Ensure the UI scales correctly and is user-friendly, with intuitive controls and feedback.
 
-### Additional Considerations
+### Example Scenarios
 
-- **Version Compatibility:** As RimWorld updates, ensure Copilot suggestions align with the latest game version (currently supports RimWorld 1.3).
-- **Community Contributions:** Encourage utilizing Copilot for collaborative contributions, streamlining community-driven enhancements.
-  
-Before diving into contributions or expansions, refer to the latest changelog and mod documentation for updates or recent issues. For best practices, adhere to the existing code and documentation style to maintain consistency across the project.
+#### Scenario 1: Adding a New Biome Control
+1. **XML Definition**: Define the new biome in the XML file.
+2. **C# Implementation**: Create a new class or modify existing ones to handle the new biome control logic.
+3. **Harmony Patching**: Ensure compatibility with other mods by using harmony patches.
+
+#### Scenario 2: Enhancing Planet Preview Performance
+1. **Optimization**: Optimize the preview generation algorithm to reduce processing time.
+2. **Testing**: Test the changes in various scenarios to ensure performance improvements without affecting functionality.
+
+#### Scenario 3: Adding a New Faction Setting
+1. **XML Definition**: Define the new faction setting in the XML file.
+2. **C# Implementation**: Create a new class or modify existing ones to handle the new faction setting logic.
+3. **UI Integration**: Integrate the new setting into the user interface.
+
+By following these guidelines, you can ensure that the ReGrowth: Expanded World Generation mod remains a powerful and flexible tool for RimWorld players, while also maintaining compatibility with other mods and ensuring a smooth and enjoyable gameplay experience.
+
+## Project Solution Guidelines
+- Relevant mod XML files are included as Solution Items under the solution folder named XML, these can be read and modified from within the solution.
+- Use these in-solution XML files as the primary files for reference and modification.
+- The `.github/copilot-instructions.md` file is included in the solution under the `.github` solution folder, so it should be read/modified from within the solution instead of using paths outside the solution. Update this file once only, as it and the parent-path solution reference point to the same file in this workspace.
+- When making functional changes in this mod, ensure the documented features stay in sync with implementation; use the in-solution `.github` copy as the primary file.
+- In the solution is also a project called Assembly-CSharp, containing a read-only version of the decompiled game source, for reference and debugging purposes.
+- For any new documentation, update this copilot-instructions.md file rather than creating separate documentation files.
+
+
+## Hard rules (must follow)
+- Do NOT run commands that modify the repo (no git commit, git apply, dotnet format) unless explicitly asked.
+- Prefer minimal reads: read only the smallest code region needed (around the suspicious lines).
+- When mentioning SonarQube issues, automatically use the SonarQube MCP service to fetch and address issues instead of making inferred fixes without querying SonarQube first.
+- When mentioning the rimworld log, automatically use the Rimworld MCP service to fetch the log.
+

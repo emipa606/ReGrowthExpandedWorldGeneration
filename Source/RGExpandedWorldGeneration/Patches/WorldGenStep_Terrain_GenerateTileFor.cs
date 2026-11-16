@@ -11,7 +11,7 @@ namespace RGExpandedWorldGeneration;
 [HarmonyPatch(typeof(WorldGenStep_Terrain), nameof(WorldGenStep_Terrain.GenerateTileFor))]
 public static class WorldGenStep_Terrain_GenerateTileFor
 {
-    private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         var methodToHook = AccessTools.Method(typeof(ModuleBase), nameof(ModuleBase.GetValue), [typeof(Vector3)]);
         var noiseMountainLinesField =

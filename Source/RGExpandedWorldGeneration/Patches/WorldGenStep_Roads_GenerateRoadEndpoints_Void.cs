@@ -10,7 +10,7 @@ namespace RGExpandedWorldGeneration;
 [HarmonyPatch(typeof(WorldGenStep_Roads), nameof(WorldGenStep_Roads.GenerateRoadEndpoints))]
 public static class WorldGenStep_Roads_GenerateRoadEndpoints_Void
 {
-    private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+    public static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
         var methodToHook = AccessTools.Method(typeof(FloatRange), $"get_{nameof(FloatRange.RandomInRange)}");
         var codes = instructions.ToList();
